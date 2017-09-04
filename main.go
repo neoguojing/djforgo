@@ -14,9 +14,9 @@ import (
 
 	//"context"
 	l4g "github.com/alecthomas/log4go"
-	"neoproj/djforgo/config"
-	"neoproj/djforgo/server"
-	"neoproj/djforgo/utils"
+	"djforgo/config"
+	"djforgo/server"
+	"djforgo/utils"
 )
 
 func main() {
