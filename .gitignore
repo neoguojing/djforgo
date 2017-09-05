@@ -1,4 +1,5 @@
 hds
+bin/bin*
 djforgo*
 test
 *.log.*
