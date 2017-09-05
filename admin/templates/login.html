@@ -1,0 +1,114 @@
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+<link rel="icon" href="/static/favicon.ico" mce_href="/static/favicon.ico" type="image/x-icon">
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="/static/js/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/bootstrap3-typeahead.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+	<div class="row">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+	  <div class="container">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="#">Brand</a>
+	    </div>
+	
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+	        <li><a href="#">Link</a></li>
+	        <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="#">Action</a></li>
+	            <li><a href="#">Another action</a></li>
+	            <li><a href="#">Something else here</a></li>
+	            <li role="separator" class="divider"></li>
+	            <li><a href="#">Separated link</a></li>
+	            <li role="separator" class="divider"></li>
+	            <li><a href="#">One more separated link</a></li>
+	          </ul>
+	        </li>
+	      </ul>
+	      <form class="navbar-form navbar-left">
+	        <div class="form-group">
+	          <input type="text" class="form-control" placeholder="Search">
+	        </div>
+	        <button type="submit" class="btn btn-default">Submit</button>
+	      </form>
+	      <ul class="nav navbar-nav navbar-right">
+	        <li><a href="#" clase="btn btn-primary navbar-btn">Login</a></li>
+	        <li><a href="#" clase="btn btn-primary navbar-btn">Join us</a></li>
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+	
+	</div>
+
+	<div class="row" style="margin-top:10%; margin-bottom:5%">
+		<h2 class="text-center" >Login</h1>
+	</div>
+	
+	<div class="row">
+		<form class="form-horizontal" action="/login" method="POST">
+			<div class="form-group">
+			  <label for="inputEmail" class="col-sm-4 control-label">Email</label>
+			  <div class="col-sm-4">
+			    <input type="email" class="form-control" name="email" id="inputEmail" placeholder="Email">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label for="inputPassword" class="col-sm-4 control-label">Password</label>
+			  <div class="col-sm-4">
+			    <input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <div class="col-sm-offset-4 col-sm-2">
+			    <div class="checkbox">
+			      <label>
+			        <input type="checkbox" name="remember"> Remember me
+			      </label>
+			    </div>
+			  </div>
+			</div>
+			<div class="form-group">
+			  <div class="col-sm-offset-4 col-sm-4">
+			    <button type="submit" class="btn btn-primary">Sign in</button>
+			  </div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-4 col-sm-2">
+			         <a>forget password </a>
+			    </div>
+			</div>
+		</form>
+	</div>
+
+</div>
+
+</body>
+</html>

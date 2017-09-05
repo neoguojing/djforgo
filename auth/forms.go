@@ -1,6 +1,6 @@
 package auth
 
-import(
+import (
 	"github.com/bluele/gforms"
 )
 

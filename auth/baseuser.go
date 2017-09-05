@@ -1,15 +1,15 @@
 package auth
 
-import(
-	"neoproj/djforgo/dao"
+import (
 	"github.com/jinzhu/gorm"
+	"neoproj/djforgo/dao"
 )
 
-type IUserManager interface{
+type IUserManager interface {
 	NormalizeEmail()
 }
 
-type IUser interface{
+type IUser interface {
 	GetUserName()
 	Save()
 	IsAnonymous()
@@ -26,4 +26,3 @@ type BaseUserManager struct {
 type BaseUser struct {
 	gorm.Model
 }
-

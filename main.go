@@ -13,10 +13,10 @@ import (
 	_ "net/http/pprof"
 
 	//"context"
-	l4g "github.com/alecthomas/log4go"
 	"djforgo/config"
 	"djforgo/server"
 	"djforgo/utils"
+	l4g "github.com/alecthomas/log4go"
 )
 
 func main() {

@@ -1,10 +1,10 @@
 package server
 
 import (
+	"djforgo/config"
 	"fmt"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/gorilla/mux"
-	"djforgo/config"
 	"net/http"
 )
 
@@ -25,6 +25,8 @@ func newRouter() *mux.Router {
 
 		router.Methods(route.Method1, route.Method2).Path(route.Pattern).Name(route.Name).Handler(handler)
 	}
+
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./admin/static"))))
 
 	return router
 }

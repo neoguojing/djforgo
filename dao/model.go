@@ -1,8 +1,6 @@
 package dao
 
-import(
-	
-)
+import ()
 
 type IModel interface {
 	Create()
@@ -10,6 +8,3 @@ type IModel interface {
 	Delete()
 	Query()
 }
-
-
-

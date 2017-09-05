@@ -1,6 +1,7 @@
 package server
 
 import (
+	"djforgo/admin/views"
 	"net/http"
 )
 
@@ -16,11 +17,11 @@ type Routes []Route
 
 var routes = Routes{
 	Route{
-		Name:        "Main",
+		Name:        "login",
 		Method1:     "GET",
 		Method2:     "POST",
-		Pattern:     "/",
-		HandlerFunc: nil,
+		Pattern:     "/login",
+		HandlerFunc: views.Login,
 	},
 	Route{
 		Name:        "HttpServerV1",

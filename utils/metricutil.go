@@ -3,7 +3,7 @@ package utils
 import (
 	l4g "github.com/alecthomas/log4go"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"jcqts/hds/config"
+	"djforgo/config"
 	"net/http"
 )
 

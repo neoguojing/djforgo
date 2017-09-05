@@ -28,12 +28,13 @@ func LoadConfig(appcfgfile *string) error {
 	if len(*appcfgfile) > 0 {
 		data, err := ioutil.ReadFile(*appcfgfile)
 		if err != nil {
+			l4g.Error(err)
 			data = []byte(*appcfgfile)
 		}
 
 		err = json.Unmarshal(data, QasConfig)
 		if err != nil {
-			return err
+			return l4g.Error(err)
 		}
 
 	} else {
