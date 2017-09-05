@@ -2,6 +2,7 @@ package server
 
 import (
 	"djforgo/config"
+	"djforgo/dao"
 	"fmt"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/gorilla/mux"
@@ -36,7 +37,9 @@ func (this *Server) OnInit() error {
 	http.Handle("/", newRouter())
 	l4g.Info("http://%s:%s/\n", config.QasConfig.Downnet.HttpIP, config.QasConfig.Downnet.Port)
 
-	return nil
+	err := dao.DB_Init()
+
+	return err
 }
 
 func (this *Server) OnWork() {
@@ -48,5 +51,5 @@ func (this *Server) OnWork() {
 }
 
 func (this *Server) OnClose() {
-
+	dao.DB_Destroy()
 }

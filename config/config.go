@@ -15,10 +15,16 @@ type MetricConfig struct {
 	Addr string
 }
 
+type DBConfig struct {
+	Drivername string
+	DataSource string
+}
+
 type Config struct {
 	Downnet DownnetCfg
 	Metric  MetricConfig
 	Pprof   string
+	DB      DBConfig
 }
 
 var QasConfig *Config = new(Config)

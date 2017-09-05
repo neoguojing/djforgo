@@ -75,7 +75,11 @@ func main() {
 
 	//>>>>>>>>>>>>>>>>工作区>>>>>>>>>>>>>>>>>>>>>>>>>>
 	//ctx, cancel := context.WithCancel(context.Background())
-	server.ServerInstance.OnInit()
+	err := server.ServerInstance.OnInit()
+	if err != nil {
+		return
+	}
+
 	server.ServerInstance.OnWork()
 	defer server.ServerInstance.OnClose()
 

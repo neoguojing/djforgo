@@ -1,9 +1,9 @@
 package utils
 
 import (
+	"djforgo/config"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"djforgo/config"
 	"net/http"
 )
 
