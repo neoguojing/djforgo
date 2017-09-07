@@ -20,11 +20,18 @@ type DBConfig struct {
 	DataSource string
 }
 
+type SessionCfg struct {
+	Salt   string
+	Name   string
+	MaxAge int
+}
+
 type Config struct {
 	Downnet DownnetCfg
 	Metric  MetricConfig
 	Pprof   string
 	DB      DBConfig
+	Session SessionCfg
 }
 
 var QasConfig *Config = new(Config)

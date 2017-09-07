@@ -8,11 +8,12 @@ import (
 
 type IUser interface {
 	GetUserName() string
+	SetUserName(string)
 	GetEmail() string
-	Save() error
+	SetEmail(string)
 	IsAnonymous() bool
 	IsAuthenticated() bool
-	SetPassword() error
+	SetPassword(string) error
 	CheckPassword(string) bool
 }
 
@@ -22,26 +23,29 @@ type BaseUserManager struct {
 
 type BaseUser struct {
 	gorm.Model
-	Name      string `schema:"name" gorm:"type:varchar(50);unique"`
-	Email     string `schema:"email" gorm:"type:varchar(50);not null;unique"`
-	Password  string `schema:"password" gorm:"not null"`
-	Is_active bool   `schema:"-"`
+	Name      string `gorm:"type:varchar(50);unique"`
+	Email     string `gorm:"type:varchar(50);not null;unique"`
+	Password  string `gorm:"not null"`
+	Is_active bool   `gorm:"default:True"`
+	Is_Admin  bool   `gorm:"default:False"`
+
+	BaseUserManager `gorm:"-"`
 }
 
 func (this *BaseUser) GetUserName() string {
 	return this.Name
 }
 
+func (this *BaseUser) SetUserName(username string) {
+	this.Name = username
+}
+
 func (this *BaseUser) GetEmail() string {
 	return this.Email
 }
 
-func (this *BaseUser) Save() error {
-	if err := this.SetPassword(); err != nil {
-		return err
-	}
-
-	return nil
+func (this *BaseUser) SetEmail(email string) {
+	this.Email = email
 }
 
 func (this *BaseUser) IsAnonymous() bool {
@@ -52,8 +56,9 @@ func (this *BaseUser) IsAuthenticated() bool {
 	return true
 }
 
-func (this *BaseUser) SetPassword() error {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(this.Password), 14)
+func (this *BaseUser) SetPassword(rawpassword string) error {
+
+	bytes, err := bcrypt.GenerateFromPassword([]byte(rawpassword), 14)
 	if err != nil {
 		return err
 	}

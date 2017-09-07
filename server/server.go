@@ -3,6 +3,9 @@ package server
 import (
 	"djforgo/config"
 	"djforgo/dao"
+	"djforgo/middleware"
+	"djforgo/sessions"
+	"djforgo/urls"
 	"fmt"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/gorilla/mux"
@@ -20,7 +23,7 @@ var ServerInstance = NewServer()
 
 func newRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
-	for _, route := range routes {
+	for _, route := range urls.Urls {
 		var handler http.Handler
 		handler = route.HandlerFunc
 
@@ -33,8 +36,8 @@ func newRouter() *mux.Router {
 }
 
 func (this *Server) OnInit() error {
-
-	http.Handle("/", newRouter())
+	sessions.InitSessionStore()
+	http.Handle("/", middleware.MiddlewareHandler(newRouter()))
 	l4g.Info("http://%s:%s/\n", config.QasConfig.Downnet.HttpIP, config.QasConfig.Downnet.Port)
 
 	err := dao.DB_Init()

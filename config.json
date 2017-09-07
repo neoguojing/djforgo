@@ -10,5 +10,10 @@
 	"DB": {
 		"Drivername": "mysql",
 		"DataSource": "admin:admin@tcp(192.168.59.96:3306)/webadmin?charset=utf8&parseTime=True&loc=Local"
+	},
+	"Session":{
+		"Salt":"123456",
+		"Name":"SESSIONID",
+		"MaxAge":3600
 	}
 }

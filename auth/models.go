@@ -2,6 +2,7 @@ package auth
 
 import (
 	"djforgo/dao"
+	//l4g "github.com/alecthomas/log4go"
 	"github.com/jinzhu/gorm"
 )
 
@@ -23,9 +24,30 @@ type Group struct {
 	Name string `gorm:"size:255;unique"`
 }
 
+type UserManager struct {
+	BaseUserManager
+}
+
+func (this *UserManager) CreateUser(user *User) error {
+	user.Is_Admin = false
+	user.Is_staff = false
+	user.SetPassword("")
+
+	return this.Save(user).Error
+}
+
+func (this *UserManager) CreateAdminUser(user *User) error {
+	user.Is_Admin = true
+	user.Is_staff = true
+	user.SetPassword("")
+
+	return this.Save(user).Error
+}
+
 type User struct {
 	BaseUser
-	Is_staff bool `schema:"-"`
+	Is_staff    bool `gorm:"default:False"`
+	UserManager `gorm:"-"`
 }
 
 func (this *User) SendEmail() error {
@@ -39,8 +61,15 @@ func (this *AnonymousUser) GetUserName() string {
 	return ""
 }
 
+func (this *AnonymousUser) SetUserName(username string) {
+
+}
+
 func (this *AnonymousUser) GetEmail() string {
 	return ""
+}
+
+func (this *AnonymousUser) SetEmail(email string) {
 }
 
 func (this *AnonymousUser) Save() error {
@@ -55,10 +84,10 @@ func (this *AnonymousUser) IsAuthenticated() bool {
 	return false
 }
 
-func (this *AnonymousUser) SetPassword() error {
+func (this *AnonymousUser) SetPassword(rawpassword string) error {
 	return nil
 }
 
-func (this *AnonymousUser) CheckPassword() error {
-	return nil
+func (this *AnonymousUser) CheckPassword(rawPassword string) bool {
+	return true
 }

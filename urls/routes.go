@@ -1,4 +1,4 @@
-package server
+package urls
 
 import (
 	"djforgo/admin/views"
@@ -15,7 +15,7 @@ type Route struct {
 
 type Routes []Route
 
-var routes = Routes{
+var Urls = Routes{
 	Route{
 		Name:        "login",
 		Method1:     "GET",
@@ -24,24 +24,10 @@ var routes = Routes{
 		HandlerFunc: views.Login,
 	},
 	Route{
-		Name:        "HttpServerV1",
+		Name:        "register",
 		Method1:     "GET",
 		Method2:     "POST",
-		Pattern:     "/v1/http",
-		HandlerFunc: nil,
-	},
-	Route{
-		Name:        "HttpServerV2",
-		Method1:     "GET",
-		Method2:     "POST",
-		Pattern:     "/v2/http",
-		HandlerFunc: nil,
-	},
-	Route{
-		Name:        "HttpServerJson",
-		Method1:     "GET",
-		Method2:     "POST",
-		Pattern:     "/httpforjson",
-		HandlerFunc: nil,
+		Pattern:     "/register",
+		HandlerFunc: views.Register,
 	},
 }

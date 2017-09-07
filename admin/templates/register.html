@@ -69,11 +69,17 @@
 	</div>
 
 	<div class="row" style="margin-top:10%; margin-bottom:5%">
-		<h2 class="text-center" >Login</h1>
+		<h2 class="text-center" >Register</h1>
 	</div>
 	
 	<div class="row">
-		<form class="form-horizontal" action="/login" method="POST">
+		<form class="form-horizontal" action="/register" method="POST">
+			<div class="form-group">
+			  <label for="inputName" class="col-sm-4 control-label">Name</label>
+			  <div class="col-sm-4">
+			    <input type="text" class="form-control" name="username" id="inputName" placeholder="Username">
+			  </div>
+			</div>
 			<div class="form-group">
 			  <label for="inputEmail" class="col-sm-4 control-label">Email</label>
 			  <div class="col-sm-4">
@@ -81,29 +87,21 @@
 			  </div>
 			</div>
 			<div class="form-group">
-			  <label for="inputPassword" class="col-sm-4 control-label">Password</label>
+			  <label for="inputPassword1" class="col-sm-4 control-label">Password1</label>
 			  <div class="col-sm-4">
-			    <input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password">
+			    <input type="password" class="form-control" name="password1" id="inputPassword1" placeholder="Password">
 			  </div>
 			</div>
 			<div class="form-group">
-			  <div class="col-sm-offset-4 col-sm-2">
-			    <div class="checkbox">
-			      <label>
-			        <input type="checkbox" name="remember"> Remember me
-			      </label>
-			    </div>
+			  <label for="inputPassword2" class="col-sm-4 control-label">Password2</label>
+			  <div class="col-sm-4">
+			    <input type="password" class="form-control" name="password2" id="inputPassword2" placeholder="Password">
 			  </div>
 			</div>
 			<div class="form-group">
 			  <div class="col-sm-offset-4 col-sm-4">
-			    <button type="submit" class="btn btn-primary">Sign in</button>
+			    <button type="submit" class="btn btn-primary">Join</button>
 			  </div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-offset-4 col-sm-2">
-			         <a>forget password </a>
-			    </div>
 			</div>
 		</form>
 	</div>

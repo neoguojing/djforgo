@@ -11,7 +11,6 @@ import (
 var decoder = schema.NewDecoder()
 
 func Login(w http.ResponseWriter, req *http.Request) {
-
 	if req.Method != http.MethodPost {
 		html, err := template.ParseFiles("./admin/templates/login.html")
 		if err != nil {
@@ -29,11 +28,23 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var user auth.User
+	var user auth.UserLoginForm
 	err = decoder.Decode(&user, req.PostForm)
 	if err != nil {
 		l4g.Error(err)
 		return
+	}
+
+	if user.Valid() != nil {
+		http.Redirect(w, req, "/login", http.StatusFound)
+		return
+	}
+
+	if auth.Login_Check(&user) != nil {
+		http.Redirect(w, req, "/login", http.StatusFound)
+		return
+	} else {
+
 	}
 
 	l4g.Debug(user)
