@@ -2,8 +2,8 @@ package views
 
 import (
 	"djforgo/auth"
+	"djforgo/templates"
 	l4g "github.com/alecthomas/log4go"
-	"github.com/flosch/pongo2"
 	"github.com/gorilla/context"
 	"github.com/gorilla/schema"
 	"net/http"
@@ -20,15 +20,15 @@ func Login(w http.ResponseWriter, req *http.Request) {
 	session_user := context.Get(req, USERINFO)
 	if session_user != nil {
 		if session_user.(auth.IUser).IsAuthenticated() {
-			http.Redirect(w, req, "/index", http.StatusFound)
+			templates.RedirectTo(w, "/index")
 			return
 		}
 	}
 
 	if req.Method != http.MethodPost {
-		tmplate := pongo2.Must(pongo2.FromFile("./auth/templates/login.html"))
 
-		tmplate.ExecuteWriter(nil, w)
+		templates.RenderTemplate(req, "./auth/templates/login.html", nil)
+
 		return
 	}
 
@@ -46,20 +46,19 @@ func Login(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if userFrom.Valid() != nil {
-		http.Redirect(w, req, "/login", http.StatusFound)
+		templates.RedirectTo(w, "/login")
 		return
 	}
 
 	var user auth.IUser
 	user, err = auth.Login_Check(&userFrom)
 	if err != nil {
-		http.Redirect(w, req, "/login", http.StatusFound)
+		templates.RedirectTo(w, "/login")
 		return
 	}
 
 	context.Set(req, SESSIONINFO, user.GetUserName())
-	//l4g.Debug("%p,%v", req, userFrom)
 
-	//http.Redirect(w, req, "/index", http.StatusFound)
+	templates.RedirectTo(w, "/index")
 
 }

@@ -33,7 +33,5 @@ func (this *SessionMiddleware) ProcessResponse(w http.ResponseWriter, r *http.Re
 	//l4g.Debug("%p-%v", r, username, "ProcessResponse", r.RequestURI)
 	G_SessionStore.SetSession(w, r, SESSIONINFO, username)
 
-	//clear the context
-	context.Clear(r)
 	return
 }

@@ -44,6 +44,7 @@ func MiddlewareHandlerFunc(next http.HandlerFunc) http.HandlerFunc {
 
 func init() {
 	Middlewares = make([]IMiddleware, 0)
+	Middlewares = append(Middlewares, &CommonMiddleware{})
 	Middlewares = append(Middlewares, &sessions.SessionMiddleware{})
 	Middlewares = append(Middlewares, &auth.AuthenticationMiddleware{})
 }
