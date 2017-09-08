@@ -1,7 +1,8 @@
 package auth
 
 import (
-	"context"
+	//l4g "github.com/alecthomas/log4go"
+	"github.com/gorilla/context"
 	"net/http"
 )
 
@@ -14,11 +15,18 @@ type AuthenticationMiddleware struct {
 }
 
 func (this *AuthenticationMiddleware) ProcessRequest(w http.ResponseWriter, r *http.Request) {
-	username := r.Context().Value(SESSIONINFO).(string)
-	user, err := GetUserByUsername(&username)
-	if err == nil {
-		context.WithValue(r.Context(), USERINFO, user)
+
+	username := context.Get(r, SESSIONINFO)
+	if username == nil {
+		username = ""
 	}
+
+	user, err := GetUserByUsername(username.(string))
+	if err == nil {
+		context.Set(r, USERINFO, user)
+	}
+
+	//l4g.Debug("%v", username.(string), "AuthenticationMiddleware", r.RequestURI)
 }
 
 func (this *AuthenticationMiddleware) ProcessResponse(w http.ResponseWriter, r *http.Request) {

@@ -1,8 +1,15 @@
 package urls
 
 import (
-	"djforgo/admin/views"
+	admin "djforgo/admin/views"
+	"djforgo/auth/views"
+	"djforgo/middleware"
+	"github.com/gorilla/mux"
 	"net/http"
+)
+
+var (
+	G_Router *mux.Router
 )
 
 type Route struct {
@@ -21,7 +28,7 @@ var Urls = Routes{
 		Method1:     "GET",
 		Method2:     "POST",
 		Pattern:     "/login",
-		HandlerFunc: views.Login,
+		HandlerFunc: middleware.MiddlewareHandlerFunc(views.Login),
 	},
 	Route{
 		Name:        "register",
@@ -30,4 +37,26 @@ var Urls = Routes{
 		Pattern:     "/register",
 		HandlerFunc: views.Register,
 	},
+	Route{
+		Name:        "index",
+		Method1:     "GET",
+		Method2:     "POST",
+		Pattern:     "/index",
+		HandlerFunc: middleware.MiddlewareHandlerFunc(admin.IndexHandler),
+	},
+}
+
+func newRouter() *mux.Router {
+	router := mux.NewRouter().StrictSlash(true)
+	for _, route := range Urls {
+		router.Methods(route.Method1, route.Method2).Path(route.Pattern).Name(route.Name).HandlerFunc(route.HandlerFunc)
+	}
+
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+
+	return router
+}
+
+func init() {
+	G_Router = newRouter()
 }

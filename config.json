@@ -14,6 +14,6 @@
 	"Session":{
 		"Salt":"123456",
 		"Name":"SESSIONID",
-		"MaxAge":3600
+		"MaxAge":86400
 	}
 }

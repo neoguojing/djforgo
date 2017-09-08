@@ -1,8 +1,8 @@
 package sessions
 
 import (
-	"context"
-	l4g "github.com/alecthomas/log4go"
+	//l4g "github.com/alecthomas/log4go"
+	"github.com/gorilla/context"
 	"net/http"
 )
 
@@ -16,23 +16,24 @@ type SessionMiddleware struct {
 func (this *SessionMiddleware) ProcessRequest(w http.ResponseWriter, r *http.Request) {
 
 	session := G_SessionStore.GetSession(r)
-	sessioninfo, ok := session.Values[SESSIONINFO]
-	if !ok {
-		l4g.Error("no session avalable")
+	if session == nil {
 		return
 	}
 
-	context.WithValue(r.Context(), SESSIONINFO, sessioninfo)
+	context.Set(r, SESSIONINFO, session.Values[SESSIONINFO])
 	return
 }
 
 func (this *SessionMiddleware) ProcessResponse(w http.ResponseWriter, r *http.Request) {
-	username := r.Context().Value(SESSIONINFO)
+	username := context.Get(r, SESSIONINFO)
 	if username == nil {
-		l4g.Error("no session info avaliable")
 		return
 	}
 
+	//l4g.Debug("%p-%v", r, username, "ProcessResponse", r.RequestURI)
 	G_SessionStore.SetSession(w, r, SESSIONINFO, username)
+
+	//clear the context
+	context.Clear(r)
 	return
 }

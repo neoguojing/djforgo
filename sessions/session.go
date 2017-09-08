@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	DEFALT_PATH = "/admin/"
+	DEFALT_PATH = "/"
 )
 
 var G_SessionStore *SessionStore
@@ -21,16 +21,18 @@ type SessionStore struct {
 
 func newSessionStore() *SessionStore {
 	serstr := config.QasConfig.Session.Salt + time.Now().String()
-	l4g.Debug(serstr)
 	secret, _ := bcrypt.GenerateFromPassword([]byte(serstr), 14)
-	l4g.Debug(string(secret))
 	return &SessionStore{
 		store: sessions.NewCookieStore(secret),
 	}
 }
 
 func (this *SessionStore) GetSession(r *http.Request) *sessions.Session {
-	session, _ := this.store.Get(r, config.QasConfig.Session.Name)
+	session, err := this.store.New(r, config.QasConfig.Session.Name)
+	if err != nil {
+		l4g.Error(err)
+		return nil
+	}
 	return session
 }
 

@@ -3,20 +3,16 @@ package views
 import (
 	"djforgo/auth"
 	l4g "github.com/alecthomas/log4go"
-	"html/template"
+	"github.com/flosch/pongo2"
 	"net/http"
 )
 
 func Register(w http.ResponseWriter, req *http.Request) {
 
 	if req.Method != http.MethodPost {
-		html, err := template.ParseFiles("./admin/templates/register.html")
-		if err != nil {
-			l4g.Error("Register parse html faild", err)
-			return
-		}
+		template := pongo2.Must(pongo2.FromFile("./auth/templates/register.html"))
 
-		html.Execute(w, nil)
+		template.ExecuteWriter(nil, w)
 		return
 	}
 

@@ -5,13 +5,13 @@ import (
 	l4g "github.com/alecthomas/log4go"
 )
 
-func GetUserByUsername(username *string) (IUser, error) {
-	if username == nil {
+func GetUserByUsername(username string) (IUser, error) {
+	if username == "" {
 		return &AnonymousUser{}, nil
 	}
 
 	var user User
-	err := dao.DB_Instance.Where("name = ?", *username).First(&user).Error
+	err := dao.DB_Instance.Where("name = ?", username).First(&user).Error
 	if err != nil {
 		return nil, l4g.Error(err)
 	}
@@ -33,16 +33,16 @@ func GetUserByEmail(email *string) (IUser, error) {
 	return &user, err
 }
 
-func Login_Check(loginform *UserLoginForm) error {
+func Login_Check(loginform *UserLoginForm) (IUser, error) {
 	var user IUser
 	user, err := GetUserByEmail(&loginform.Email)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if !user.CheckPassword(loginform.Password) {
-		return l4g.Error("Password is invalid")
+		return nil, l4g.Error("Password is invalid")
 	}
 
-	return nil
+	return user, nil
 }
