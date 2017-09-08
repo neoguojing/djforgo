@@ -67,21 +67,33 @@
 	
 	</div>
 
-	<div class="row"  style="margin-top:15%">
+	<div class="row"  style="margin-top:5%">
 		<div class="panel panel-primary">
 		  <!-- Default panel contents -->
-		  <div class="panel-heading">{{ user.Name }}</div>
-		  <div class="panel-body">
-		    <p>Users</p>
-		  </div>
-		{% if user.Is_Admin %}
-		  <!-- List group -->
-		  <ul class="list-group">
-			{% for singleuser in users %}
-		    <li class="list-group-item">{{ singleuser.Name }}</li>
-			{% endfor %}
-		  </ul>
-		{% endif %}
+			<div class="panel-heading">
+				<ul class="list-inline">
+				 	<li><h4>Administrator:</h4></li>
+					<li><h4>{{ user.Name }}</h4></li>
+				</ul>
+			</div>
+			{% if user.Is_Admin %}
+				<table class="table table-hover">
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Active</th>
+					</tr>
+				{% for singleuser in users %}
+			    	<tr>
+						<td>{{ singleuser.ID }}</td>
+						<td>{{ singleuser.Name }}</td>
+						<td>{{ singleuser.Email }}</td>
+						<td>{{ singleuser.Is_active }}</td>
+					</tr>
+				{% endfor %}
+				</table>
+			{% endif %}
 		</div>
 	</div>
 

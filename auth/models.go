@@ -12,7 +12,7 @@ type PermissionManager struct {
 
 type Permission struct {
 	gorm.Model
-	Name string `gorm:"size:255"`
+	Name string `gorm:"size:255;unique"`
 }
 
 type GroupManager struct {
@@ -21,7 +21,7 @@ type GroupManager struct {
 
 type Group struct {
 	gorm.Model
-	Name string `gorm:"size:255;unique"`
+	Name string `gorm:"size:80;unique"`
 }
 
 type UserManager struct {
@@ -30,9 +30,11 @@ type UserManager struct {
 
 func (this *UserManager) GetQueryset(out interface{}) *gorm.DB {
 	this.Init()
-	return this.DB.Where("is_admin <> ?",true).Find(out)
-}
+	db := this.DB.Select("id", "name", "email", "is_active", "is_admin", "is_staff").
+		Where("is_admin <> ?", true).Find(out)
 
+	return db
+}
 
 func (this *UserManager) CreateUser(user *User) error {
 	user.Is_Admin = false
