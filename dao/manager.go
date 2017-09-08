@@ -17,45 +17,45 @@ var managerPool = sync.Pool{
 }
 
 type Manager struct {
-	db *gorm.DB
+	DB *gorm.DB
 	sync.Once
 }
 
 func NewManager() *Manager {
 	rtn := managerPool.Get().(*Manager)
-	rtn.db = DB_Instance
+	rtn.DB = DB_Instance
 	return rtn
 }
 
-func (this *Manager) init() {
+func (this *Manager) Init() {
 	this.Do(func() {
-		this.db = DB_Instance
+		this.DB = DB_Instance
 	})
 }
 
 func (this *Manager) GetQueryset(out interface{}) *gorm.DB {
-	this.init()
-	return this.db.Find(out)
+	this.Init()
+	return this.DB.Find(out)
 }
 
 func (this *Manager) Save(in interface{}) *gorm.DB {
-	this.init()
+	this.Init()
 
 	var db *gorm.DB
-	if this.db.NewRecord(in) {
-		db = this.db.Create(in)
+	if this.DB.NewRecord(in) {
+		db = this.DB.Create(in)
 	} else {
-		db = this.db.Save(in)
+		db = this.DB.Save(in)
 	}
 
 	return db
 }
 
 func (this *Manager) Delete(in interface{}) *gorm.DB {
-	this.init()
+	this.Init()
 
 	var db *gorm.DB
-	db = this.db.Delete(in)
+	db = this.DB.Delete(in)
 
 	return db
 }

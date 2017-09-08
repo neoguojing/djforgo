@@ -1,8 +1,11 @@
 package auth
 
 import (
+	"djforgo/config"
 	"djforgo/dao"
 	l4g "github.com/alecthomas/log4go"
+	"github.com/gorilla/context"
+	"net/http"
 )
 
 func GetUserByUsername(username string) (IUser, error) {
@@ -45,4 +48,34 @@ func Login_Check(loginform *UserLoginForm) (IUser, error) {
 	}
 
 	return user, nil
+}
+
+func IsAuthticated(r *http.Request) bool {
+	user := context.Get(r, config.USERINFO)
+	if user == nil {
+		return false
+	}
+
+	return user.(IUser).IsAuthenticated()
+}
+
+func GetUsers(r *http.Request) []User {
+	user := context.Get(r, config.USERINFO)
+	if user == nil {
+		return nil
+	}
+
+	var users []User = make([]User, 0)
+
+	if user.(IUser).IsAuthenticated() {
+		userObj := user.(*User)
+		err := userObj.GetQueryset(&users).Error
+		if err != nil {
+			l4g.Error(err)
+			return nil
+		} else {
+			return users
+		}
+	}
+	return nil
 }

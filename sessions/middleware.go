@@ -13,6 +13,9 @@ type SessionMiddleware struct {
 func (this *SessionMiddleware) ProcessRequest(w http.ResponseWriter, r *http.Request) {
 
 	session := G_SessionStore.GetSession(r)
+	if session == nil {
+		return
+	}
 
 	context.Set(r, config.SESSIONINFO, session.Values[config.SESSIONINFO])
 

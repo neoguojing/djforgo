@@ -25,8 +25,14 @@ type Group struct {
 }
 
 type UserManager struct {
-	BaseUserManager
+	dao.Manager
 }
+
+func (this *UserManager) GetQueryset(out interface{}) *gorm.DB {
+	this.Init()
+	return this.DB.Where("is_admin <> ?",true).Find(out)
+}
+
 
 func (this *UserManager) CreateUser(user *User) error {
 	user.Is_Admin = false

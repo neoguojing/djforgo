@@ -67,6 +67,24 @@
 	
 	</div>
 
+	<div class="row"  style="margin-top:15%">
+		<div class="panel panel-primary">
+		  <!-- Default panel contents -->
+		  <div class="panel-heading">{{ user.Name }}</div>
+		  <div class="panel-body">
+		    <p>Users</p>
+		  </div>
+		{% if user.Is_Admin %}
+		  <!-- List group -->
+		  <ul class="list-group">
+			{% for singleuser in users %}
+		    <li class="list-group-item">{{ singleuser.Name }}</li>
+			{% endfor %}
+		  </ul>
+		{% endif %}
+		</div>
+	</div>
+
 </div>
 
 </body>

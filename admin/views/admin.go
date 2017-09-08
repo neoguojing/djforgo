@@ -2,19 +2,26 @@ package views
 
 import (
 	//l4g "github.com/alecthomas/log4go"
-	"djforgo/config"
+	//"djforgo/config"
+	//"github.com/gorilla/context"
+	"djforgo/auth"
+	"djforgo/templates"
 	"github.com/flosch/pongo2"
-	"github.com/gorilla/context"
 	"net/http"
 )
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	//l4g.Debug(context.Get(r, SESSIONINFO))
-	context.Set(r, config.SESSIONINFO, "neo")
-	if r.Method != http.MethodPost {
-		tmplate := pongo2.Must(pongo2.FromFile("./admin/templates/index.html"))
+	//context.Set(r, config.SESSIONINFO, "neo")
 
-		tmplate.ExecuteWriter(nil, w)
+	if !auth.IsAuthticated(r) {
+		templates.RedirectTo(w, "/login")
+		return
+	}
+
+	if r.Method != http.MethodPost {
+		ctx := pongo2.Context{"users": auth.GetUsers(r)}
+		templates.RenderTemplate(r, "./admin/templates/index.html", auth.Auth_Context(r, ctx))
 		return
 	}
 }
