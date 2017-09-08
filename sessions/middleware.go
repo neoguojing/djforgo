@@ -2,12 +2,9 @@ package sessions
 
 import (
 	//l4g "github.com/alecthomas/log4go"
+	"djforgo/config"
 	"github.com/gorilla/context"
 	"net/http"
-)
-
-const (
-	SESSIONINFO = "username"
 )
 
 type SessionMiddleware struct {
@@ -20,18 +17,18 @@ func (this *SessionMiddleware) ProcessRequest(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	context.Set(r, SESSIONINFO, session.Values[SESSIONINFO])
+	context.Set(r, config.SESSIONINFO, session.Values[config.SESSIONINFO])
 	return
 }
 
 func (this *SessionMiddleware) ProcessResponse(w http.ResponseWriter, r *http.Request) {
-	username := context.Get(r, SESSIONINFO)
+	username := context.Get(r, config.SESSIONINFO)
 	if username == nil {
 		return
 	}
 
 	//l4g.Debug("%p-%v", r, username, "ProcessResponse", r.RequestURI)
-	G_SessionStore.SetSession(w, r, SESSIONINFO, username)
+	G_SessionStore.SetSession(w, r, config.SESSIONINFO, username)
 
 	return
 }

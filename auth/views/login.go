@@ -2,6 +2,7 @@ package views
 
 import (
 	"djforgo/auth"
+	"djforgo/config"
 	"djforgo/templates"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/gorilla/context"
@@ -9,15 +10,10 @@ import (
 	"net/http"
 )
 
-const (
-	USERINFO    = "user"
-	SESSIONINFO = "username"
-)
-
 var decoder = schema.NewDecoder()
 
 func Login(w http.ResponseWriter, req *http.Request) {
-	session_user := context.Get(req, USERINFO)
+	session_user := context.Get(req, config.USERINFO)
 	if session_user != nil {
 		if session_user.(auth.IUser).IsAuthenticated() {
 			templates.RedirectTo(w, "/index")
@@ -57,7 +53,7 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	context.Set(req, SESSIONINFO, user.GetUserName())
+	context.Set(req, config.SESSIONINFO, user.GetUserName())
 
 	templates.RedirectTo(w, "/index")
 

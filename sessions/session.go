@@ -9,10 +9,6 @@ import (
 	"time"
 )
 
-const (
-	DEFALT_PATH = "/"
-)
-
 var G_SessionStore *SessionStore
 
 type SessionStore struct {
@@ -40,7 +36,7 @@ func (this *SessionStore) SetSession(w http.ResponseWriter, r *http.Request, key
 	session, _ := this.store.Get(r, config.QasConfig.Session.Name)
 	session.Values[key] = value
 	session.Options.MaxAge = config.QasConfig.Session.MaxAge
-	session.Options.Path = DEFALT_PATH
+	session.Options.Path = config.QasConfig.Session.Path
 	session.Save(r, w)
 }
 

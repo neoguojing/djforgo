@@ -24,6 +24,7 @@ type SessionCfg struct {
 	Salt   string
 	Name   string
 	MaxAge int
+	Path   string
 }
 
 type Config struct {

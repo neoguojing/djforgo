@@ -1,12 +1,9 @@
 package middleware
 
 import (
+	"djforgo/config"
 	"github.com/gorilla/context"
 	"net/http"
-)
-
-const (
-	RESPONCECONTENT = "RESPONCE"
 )
 
 type CommonMiddleware struct {
@@ -17,7 +14,7 @@ func (this *CommonMiddleware) ProcessRequest(w http.ResponseWriter, r *http.Requ
 }
 
 func (this *CommonMiddleware) ProcessResponse(w http.ResponseWriter, r *http.Request) {
-	response := context.Get(r, RESPONCECONTENT)
+	response := context.Get(r, config.RESPONSE)
 	if response == nil {
 		w.Write(nil)
 	} else {

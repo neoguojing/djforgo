@@ -1,14 +1,11 @@
 package templates
 
 import (
+	"djforgo/config"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/context"
 	"net/http"
-)
-
-const (
-	RESPONCECONTENT = "RESPONCE"
 )
 
 func RenderTemplate(r *http.Request, path string, tcontext pongo2.Context) error {
@@ -17,7 +14,7 @@ func RenderTemplate(r *http.Request, path string, tcontext pongo2.Context) error
 		return err
 	}
 
-	context.Set(r, RESPONCECONTENT, tempateStr)
+	context.Set(r, config.RESPONSE, tempateStr)
 
 	return nil
 }
