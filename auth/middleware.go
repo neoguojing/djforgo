@@ -22,7 +22,6 @@ func (this *AuthenticationMiddleware) ProcessRequest(w http.ResponseWriter, r *h
 		context.Set(r, config.USERINFO, user)
 	}
 
-	//l4g.Debug("%v", username.(string), "AuthenticationMiddleware", r.RequestURI)
 }
 
 func (this *AuthenticationMiddleware) ProcessResponse(w http.ResponseWriter, r *http.Request) {

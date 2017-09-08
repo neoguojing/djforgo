@@ -32,5 +32,4 @@ func RenderAndResponse(w http.ResponseWriter, r *http.Request, path string, cont
 
 func RedirectTo(w http.ResponseWriter, url string) {
 	w.Header().Set("Location", url)
-	w.WriteHeader(http.StatusFound)
 }

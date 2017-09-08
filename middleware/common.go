@@ -16,7 +16,8 @@ func (this *CommonMiddleware) ProcessRequest(w http.ResponseWriter, r *http.Requ
 func (this *CommonMiddleware) ProcessResponse(w http.ResponseWriter, r *http.Request) {
 	response := context.Get(r, config.RESPONSE)
 	if response == nil {
-		w.Write(nil)
+		//redirect
+		w.WriteHeader(http.StatusFound)
 	} else {
 		w.Write([]byte(response.(string)))
 	}
