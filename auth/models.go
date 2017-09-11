@@ -30,7 +30,7 @@ type UserManager struct {
 
 func (this *UserManager) GetQueryset(out interface{}) *gorm.DB {
 	this.Init()
-	db := this.DB.Select("id", "name", "email", "is_active", "is_admin", "is_staff").
+	db := this.DB.Select("id,name,email,is_active,is_admin,is_staff").
 		Where("is_admin <> ?", true).Find(out)
 
 	return db

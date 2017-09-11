@@ -16,7 +16,7 @@ func GetUserByUsername(username string) (IUser, error) {
 	var user User
 	err := dao.DB_Instance.Where("name = ?", username).First(&user).Error
 	if err != nil {
-		return nil, l4g.Error(err)
+		return nil, l4g.Error("GetUserByUsername", err)
 	}
 
 	return &user, err
@@ -71,7 +71,7 @@ func GetUsers(r *http.Request) []User {
 		userObj := user.(*User)
 		err := userObj.GetQueryset(&users).Error
 		if err != nil {
-			l4g.Error(err)
+			l4g.Error("GetUsers", err)
 			return nil
 		} else {
 			return users
