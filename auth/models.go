@@ -3,6 +3,7 @@ package auth
 import (
 	"djforgo/dao"
 	//l4g "github.com/alecthomas/log4go"
+	"djforgo/auth/contenttype"
 	"github.com/jinzhu/gorm"
 )
 
@@ -12,7 +13,12 @@ type PermissionManager struct {
 
 type Permission struct {
 	gorm.Model
-	Name string `gorm:"size:255;unique"`
+	Name         string                  `gorm:"size:255"`
+	Content      contenttype.ContentType `gorm:"ForeignKey:Contentrefer;unique"`
+	Contentrefer uint
+	CodeName     string `gorm:"size:100;unique"`
+
+	PermissionManager `gorm:"-"`
 }
 
 type GroupManager struct {
@@ -21,7 +27,15 @@ type GroupManager struct {
 
 type Group struct {
 	gorm.Model
-	Name string `gorm:"size:80;unique"`
+	Name        string       `gorm:"size:80;unique"`
+	Permissions []Permission `gorm:"many2many:group_permissions;"`
+
+	GroupManager `gorm:"-"`
+}
+
+type PermissionsMixin struct {
+	Groups           []Group      `gorm:"many2many:user_groups;"`
+	User_Permissions []Permission `gorm:"many2many:user_permissions;"`
 }
 
 type UserManager struct {
@@ -54,7 +68,9 @@ func (this *UserManager) CreateAdminUser(user *User) error {
 
 type User struct {
 	BaseUser
-	Is_staff    bool `gorm:"default:False"`
+	Is_staff bool `gorm:"default:False"`
+	PermissionsMixin
+
 	UserManager `gorm:"-"`
 }
 

@@ -83,4 +83,3 @@ func GetUsers(r *http.Request) []User {
 	}
 	return nil
 }
-
