@@ -31,6 +31,13 @@ var Urls = Routes{
 		HandlerFunc: middleware.MiddlewareHandlerFunc(views.Login),
 	},
 	Route{
+		Name:        "logout",
+		Method1:     "GET",
+		Method2:     "POST",
+		Pattern:     "/logout",
+		HandlerFunc: middleware.MiddlewareHandlerFunc(views.Logout),
+	},
+	Route{
 		Name:        "register",
 		Method1:     "GET",
 		Method2:     "POST",

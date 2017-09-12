@@ -11,14 +11,15 @@ type AuthenticationMiddleware struct {
 }
 
 func (this *AuthenticationMiddleware) ProcessRequest(w http.ResponseWriter, r *http.Request) {
-
-	username := context.Get(r, config.SESSIONINFO)
-	if username == nil {
-		username = ""
-	}
-
-	user, err := GetUserByUsername(username.(string))
-	if err == nil {
+	sessionStatu := context.Get(r, config.SESSIONSTATUS).(config.SessionStatus)
+	if sessionStatu == config.Session_Exist {
+		username := context.Get(r, config.SESSIONINFO).(string)
+		user, err := GetUserByUsername(&username)
+		if err == nil {
+			context.Set(r, config.USERINFO, user)
+		}
+	} else {
+		user := GetAnonymousUser()
 		context.Set(r, config.USERINFO, user)
 	}
 

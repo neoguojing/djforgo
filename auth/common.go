@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-func GetUserByUsername(username string) (IUser, error) {
-	if username == "" {
-		return &AnonymousUser{}, nil
+func GetUserByUsername(username *string) (IUser, error) {
+	if username == nil {
+		return nil, l4g.Error("GetUserByUsername username is invalid", username)
 	}
 
 	var user User
@@ -20,6 +20,10 @@ func GetUserByUsername(username string) (IUser, error) {
 	}
 
 	return &user, err
+}
+
+func GetAnonymousUser() IUser {
+	return &AnonymousUser{}
 }
 
 func GetUserByEmail(email *string) (IUser, error) {
@@ -79,3 +83,4 @@ func GetUsers(r *http.Request) []User {
 	}
 	return nil
 }
+

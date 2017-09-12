@@ -32,10 +32,10 @@ func (this *SessionStore) GetSession(r *http.Request) *sessions.Session {
 	return session
 }
 
-func (this *SessionStore) SetSession(w http.ResponseWriter, r *http.Request, key, value interface{}) {
+func (this *SessionStore) SetSession(w http.ResponseWriter, r *http.Request, maxage int, key, value interface{}) {
 	session, _ := this.store.Get(r, config.QasConfig.Session.Name)
 	session.Values[key] = value
-	session.Options.MaxAge = config.QasConfig.Session.MaxAge
+	session.Options.MaxAge = maxage
 	session.Options.Path = config.QasConfig.Session.Path
 	session.Save(r, w)
 }
