@@ -72,7 +72,11 @@
 		  <!-- Default panel contents -->
 			<div class="panel-heading">
 				<ul class="list-inline">
+					{% if user.Is_Admin %}
 				 	<li><h4>Administrator:</h4></li>
+					{% else %}
+					<li><h4>UserName:</h4></li>
+					{% endif %}
 					<li>{{ user.Name }}</li>
 				</ul>
 			</div>

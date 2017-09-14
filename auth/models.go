@@ -53,7 +53,6 @@ func (this *UserManager) GetQueryset(out interface{}) *gorm.DB {
 func (this *UserManager) CreateUser(user *User) error {
 	user.Is_Admin = false
 	user.Is_staff = false
-	user.SetPassword("")
 
 	return this.Save(user).Error
 }
@@ -61,7 +60,6 @@ func (this *UserManager) CreateUser(user *User) error {
 func (this *UserManager) CreateAdminUser(user *User) error {
 	user.Is_Admin = true
 	user.Is_staff = true
-	user.SetPassword("")
 
 	return this.Save(user).Error
 }
