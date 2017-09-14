@@ -127,7 +127,6 @@ func (this *ModelSet) CreatePermissions() bool {
 			AppLabel:  reflect.TypeOf(v).PkgPath(),
 			ModelName: reflect.TypeOf(v).Name(),
 		}
-		fmt.Println(content)
 
 		contentId, err := content.GetId()
 		if err != nil {
