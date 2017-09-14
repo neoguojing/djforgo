@@ -16,5 +16,8 @@
 		"Name":"SESSIONID",
 		"MaxAge":86400,
 		"Path":"/"
+	},
+	"Admin":{
+		"Email":"guojing_neo@163.com"
 	}
 }

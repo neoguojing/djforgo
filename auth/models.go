@@ -21,6 +21,14 @@ type Permission struct {
 	PermissionManager `gorm:"-"`
 }
 
+func (this *Permission) Create() {
+
+}
+
+func (this *Permission) Add() {
+
+}
+
 type GroupManager struct {
 	dao.Manager
 }

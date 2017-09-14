@@ -27,12 +27,17 @@ type SessionCfg struct {
 	Path   string
 }
 
+type AdminCfg struct {
+	Email string
+}
+
 type Config struct {
 	Downnet DownnetCfg
 	Metric  MetricConfig
 	Pprof   string
 	DB      DBConfig
 	Session SessionCfg
+	Admin   AdminCfg
 }
 
 var QasConfig *Config = new(Config)

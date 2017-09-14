@@ -20,5 +20,7 @@ func DB_Init() error {
 }
 
 func DB_Destroy() {
-	DB_Instance.Close()
+	if DB_Instance != nil {
+		DB_Instance.Close()
+	}
 }
