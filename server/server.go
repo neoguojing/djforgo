@@ -1,9 +1,9 @@
 package server
 
 import (
-	"djforgo/config"
 	"djforgo/dao"
 	"djforgo/sessions"
+	"djforgo/system"
 	"djforgo/urls"
 	"fmt"
 	l4g "github.com/alecthomas/log4go"
@@ -22,7 +22,7 @@ var ServerInstance = NewServer()
 func (this *Server) OnInit() error {
 	sessions.InitSessionStore()
 	http.Handle("/", urls.G_Router)
-	l4g.Info("http://%s:%s/\n", config.QasConfig.Downnet.HttpIP, config.QasConfig.Downnet.Port)
+	l4g.Info("http://%s:%s/\n", system.QasConfig.Downnet.HttpIP, system.QasConfig.Downnet.Port)
 
 	err := dao.DB_Init()
 
@@ -30,8 +30,8 @@ func (this *Server) OnInit() error {
 }
 
 func (this *Server) OnWork() {
-	err := http.ListenAndServe(fmt.Sprintf("%s:%s", config.QasConfig.Downnet.HttpIP,
-		config.QasConfig.Downnet.Port), nil)
+	err := http.ListenAndServe(fmt.Sprintf("%s:%s", system.QasConfig.Downnet.HttpIP,
+		system.QasConfig.Downnet.Port), nil)
 	if err != nil {
 		l4g.Error(err)
 	}

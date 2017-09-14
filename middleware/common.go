@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"djforgo/config"
+	"djforgo/system"
 	"github.com/gorilla/context"
 	"net/http"
 )
@@ -14,7 +14,7 @@ func (this *CommonMiddleware) ProcessRequest(w http.ResponseWriter, r *http.Requ
 }
 
 func (this *CommonMiddleware) ProcessResponse(w http.ResponseWriter, r *http.Request) {
-	response := context.Get(r, config.RESPONSE)
+	response := context.Get(r, system.RESPONSE)
 	if response == nil {
 		//redirect
 		w.WriteHeader(http.StatusFound)

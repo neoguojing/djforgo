@@ -2,7 +2,7 @@ package views
 
 import (
 	"djforgo/auth"
-	"djforgo/config"
+	"djforgo/system"
 	"djforgo/templates"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/gorilla/context"
@@ -13,9 +13,9 @@ import (
 var decoder = schema.NewDecoder()
 
 func Login(w http.ResponseWriter, req *http.Request) {
-	sessionStatu := context.Get(req, config.SESSIONSTATUS).(config.SessionStatus)
-	if sessionStatu == config.Session_Exist {
-		session_user := context.Get(req, config.USERINFO).(auth.IUser)
+	sessionStatu := context.Get(req, system.SESSIONSTATUS).(system.SessionStatus)
+	if sessionStatu == system.Session_Exist {
+		session_user := context.Get(req, system.USERINFO).(auth.IUser)
 		if session_user.IsAuthenticated() {
 			templates.RedirectTo(w, "/index")
 			return
@@ -54,21 +54,21 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	context.Set(req, config.SESSIONINFO, user.GetUserName())
+	context.Set(req, system.SESSIONINFO, user.GetUserName())
 
 	templates.RedirectTo(w, "/index")
 
 }
 
 func Logout(w http.ResponseWriter, req *http.Request) {
-	sessionStatu := context.Get(req, config.SESSIONSTATUS).(config.SessionStatus)
-	if sessionStatu != config.Session_Exist {
+	sessionStatu := context.Get(req, system.SESSIONSTATUS).(system.SessionStatus)
+	if sessionStatu != system.Session_Exist {
 		templates.RedirectTo(w, "/login")
 		return
 	}
 
 	if req.Method != http.MethodPost {
-		context.Set(req, config.SESSIONSTATUS, config.Session_Delete)
+		context.Set(req, system.SESSIONSTATUS, system.Session_Delete)
 		templates.RedirectTo(w, "/login")
 		return
 	}

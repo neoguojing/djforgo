@@ -13,8 +13,8 @@ import (
 	_ "net/http/pprof"
 
 	//"context"
-	"djforgo/config"
 	"djforgo/server"
+	"djforgo/system"
 	"djforgo/utils"
 	l4g "github.com/alecthomas/log4go"
 )
@@ -50,8 +50,8 @@ func main() {
 	}
 
 	//初始化配置
-	config.LoadConfig(appcfgfile)
-	l4g.Info("%v", config.QasConfig)
+	system.LoadConfig(appcfgfile)
+	l4g.Info("%v", system.QasConfig)
 
 	if len(*logcfgfile) > 0 {
 		l4g.LoadConfiguration(*logcfgfile)
@@ -63,8 +63,8 @@ func main() {
 	l4g.Debug(runtime.GOMAXPROCS(runtime.NumCPU()))
 
 	//启动堆栈状态监听线程
-	if config.QasConfig != nil {
-		addr := config.QasConfig.Pprof
+	if system.QasConfig != nil {
+		addr := system.QasConfig.Pprof
 		go func() {
 			http.ListenAndServe(addr, nil)
 		}()

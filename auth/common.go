@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"djforgo/config"
 	"djforgo/dao"
+	"djforgo/system"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/gorilla/context"
 	"net/http"
@@ -55,7 +55,7 @@ func Login_Check(loginform *UserLoginForm) (IUser, error) {
 }
 
 func IsAuthticated(r *http.Request) bool {
-	user := context.Get(r, config.USERINFO)
+	user := context.Get(r, system.USERINFO)
 	if user == nil {
 		return false
 	}
@@ -64,7 +64,7 @@ func IsAuthticated(r *http.Request) bool {
 }
 
 func GetUsers(r *http.Request) []User {
-	user := context.Get(r, config.USERINFO)
+	user := context.Get(r, system.USERINFO)
 	if user == nil {
 		return nil
 	}
