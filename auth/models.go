@@ -1,9 +1,9 @@
 package auth
 
 import (
-	"djforgo/dao"
-	//l4g "github.com/alecthomas/log4go"
 	"djforgo/auth/contenttype"
+	"djforgo/dao"
+	l4g "github.com/alecthomas/log4go"
 	"github.com/jinzhu/gorm"
 )
 
@@ -27,6 +27,19 @@ func (this *Permission) Create() {
 
 func (this *Permission) Add() {
 
+}
+
+func (this *Permission) Wrapper() (string, string) {
+	this.Init()
+
+	content := contenttype.ContentType{}
+	err := this.DB.Model(this).Related(&content, "Contentrefer").Error
+	if err != nil {
+		l4g.Error("Permission::Wrapper-%v", err)
+		return "", ""
+	}
+
+	return content.AppLabel, this.CodeName
 }
 
 type GroupManager struct {
@@ -63,7 +76,7 @@ func (this *UserManager) CreateUser(user *User) error {
 func (this *UserManager) CreateAdminUser(user *User) error {
 	user.Is_Admin = true
 	user.Is_staff = true
-	err := user.SetAdminPermissions()
+	_, err := user.GetAllPermissions()
 	if err != nil {
 		return err
 	}
@@ -84,23 +97,42 @@ func (this *User) SendEmail() error {
 	return nil
 }
 
+func (this *User) copy(user *User) {
+	*this = *user
+}
+
 func (this *User) GetAllPermissions() ([]Permission, error) {
 	var perms []Permission
 	if this.Is_Admin {
 		perms = make([]Permission, 0)
-		err := this.UserManager.GetQueryset(&perms).Error
+		err := this.UserManager.Manager.GetQueryset(&perms).Error
 		if err != nil {
-			return nil, err
+			return nil, l4g.Error("User::GetAllPermissions", err)
 		}
+		this.Permissions = perms
 	} else if this.Is_staff {
-		perms = this.Permissions
+		if this.Email != "" {
+			if this.ID == 0 {
+				err := this.DB.Select("id,name,email,is_active,is_admin,is_staff").
+					Where("email = ?", this.Email).First(this).Error
+				if err != nil {
+					return nil, l4g.Error("User::GetAllPermissions", err)
+				}
+			}
+			err := this.DB.Model(this).Related(&perms, "Permissions").Error
+			if err != nil {
+				return nil, l4g.Error("User::GetAllPermissions", err)
+			}
+			this.Permissions = perms
+		}
+
 	} else {
 
 	}
 	return perms, nil
 }
 
-func (this *User) SetAdminPermissions() error {
+func (this *User) SetPermissions() error {
 	var perms []Permission
 	if this.Is_Admin {
 		perms = make([]Permission, 0)

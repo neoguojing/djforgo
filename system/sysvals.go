@@ -5,8 +5,12 @@ import ()
 const (
 	SESSIONSTATUS = "SESSIONSTATUS"
 	SESSIONINFO   = "username"
-	USERINFO      = "user"
-	RESPONSE      = "RESPONSE"
+
+	USERINFO = "user"
+
+	RESPONSE = "RESPONSE"
+
+	PERMITIONINFO = "perm"
 )
 
 type SessionStatus int

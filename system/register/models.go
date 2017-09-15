@@ -93,7 +93,7 @@ func (this *ModelSet) CreateContentType() bool {
 
 		content_type := contenttype.ContentType{
 			Name:      reflect.TypeOf(v).Name(),
-			AppLabel:  reflect.TypeOf(v).PkgPath(),
+			AppLabel:  this.getAppLable(reflect.TypeOf(v).PkgPath()),
 			ModelName: reflect.TypeOf(v).Name(),
 		}
 		err = content_type.Save(&content_type).Error
@@ -104,6 +104,17 @@ func (this *ModelSet) CreateContentType() bool {
 	}
 
 	return true
+}
+
+func (this *ModelSet) getAppLable(pkgpath string) string {
+	strs := strings.Split(pkgpath, "/")
+	if len(strs) == 1 {
+		return strs[0]
+	} else if len(strs) >= 2 {
+		return strs[1]
+	} else {
+		return ""
+	}
 }
 
 func (this *ModelSet) CreatePermissions() bool {
@@ -123,7 +134,7 @@ func (this *ModelSet) CreatePermissions() bool {
 
 		content := &contenttype.ContentType{
 			Name:      reflect.TypeOf(v).Name(),
-			AppLabel:  reflect.TypeOf(v).PkgPath(),
+			AppLabel:  this.getAppLable(reflect.TypeOf(v).PkgPath()),
 			ModelName: reflect.TypeOf(v).Name(),
 		}
 

@@ -8,6 +8,16 @@ import (
 	"net/http"
 )
 
+func PermissionWrapper(user IUser) pongo2.Context {
+	perms, err := user.GetAllPermissions()
+	if err != nil {
+		l4g.Error(err)
+	}
+
+	_ = perms
+	return nil
+}
+
 func Auth_Context(r *http.Request, tcontext pongo2.Context) pongo2.Context {
 	userObj := context.Get(r, system.USERINFO)
 	if userObj == nil {

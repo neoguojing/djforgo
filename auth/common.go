@@ -78,6 +78,7 @@ func GetUsers(r *http.Request) []User {
 			l4g.Error("GetUsers", err)
 			return nil
 		} else {
+			l4g.Debug(userObj)
 			return users
 		}
 	}
