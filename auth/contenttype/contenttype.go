@@ -30,11 +30,11 @@ type ContentType struct {
 }
 
 func (this *ContentType) GetId() (uint, error) {
-	
+
 	if this.AppLabel == "" || this.ModelName == "" {
 		return 0, l4g.Error("AppLabel or ModelName was empty")
 	}
-	
+
 	this.Init()
 	var content ContentType
 	err := this.DB.Where("app_label = ? AND model_name = ?", this.AppLabel, this.ModelName).First(&content).Error

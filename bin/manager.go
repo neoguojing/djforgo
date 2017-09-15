@@ -27,7 +27,6 @@ func main() {
 		register.ModelSetInstance.CreateContentType()
 		register.ModelSetInstance.CreatePermissions()
 		createAdmin()
-
 	}
 
 }
@@ -50,7 +49,7 @@ func createAdmin() {
 	user.SetUserName("admin")
 	user.SetPassword("admin")
 	if err = user.CreateAdminUser(&user); err != nil {
-		fmt.Println(err)
+		fmt.Println("CreateAdminUser", err)
 	}
 
 }

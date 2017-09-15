@@ -29,7 +29,6 @@ func (this *ModelSet) Register(pmodel interface{}) bool {
 	type_model := reflect.TypeOf(pmodel)
 
 	key := type_model.PkgPath() + "." + type_model.Name()
-	fmt.Println(key)
 	if _, ok := this.models[key]; ok {
 		fmt.Println("%v already exist", key)
 		return false

@@ -15,6 +15,10 @@ type IUser interface {
 	IsAuthenticated() bool
 	SetPassword(string) error
 	CheckPassword(string) bool
+
+	GetAllPermissions() ([]Permission, error)
+	GetGroupPermissions() ([]Permission, error)
+	UserHasPermission() bool
 }
 
 type BaseUserManager struct {
@@ -70,4 +74,16 @@ func (this *BaseUser) SetPassword(rawpassword string) error {
 func (this *BaseUser) CheckPassword(rawpassword string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(this.Password), []byte(rawpassword))
 	return err == nil
+}
+
+func (this *BaseUser) GetAllPermissions() ([]Permission, error) {
+	return nil, nil
+}
+
+func (this *BaseUser) GetGroupPermissions() ([]Permission, error) {
+	return nil, nil
+}
+
+func (this *BaseUser) UserHasPermission() bool {
+	return false
 }

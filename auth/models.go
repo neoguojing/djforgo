@@ -41,11 +41,6 @@ type Group struct {
 	GroupManager `gorm:"-"`
 }
 
-type PermissionsMixin struct {
-	Groups           []Group      `gorm:"many2many:user_groups;"`
-	User_Permissions []Permission `gorm:"many2many:user_permissions;"`
-}
-
 type UserManager struct {
 	dao.Manager
 }
@@ -68,20 +63,63 @@ func (this *UserManager) CreateUser(user *User) error {
 func (this *UserManager) CreateAdminUser(user *User) error {
 	user.Is_Admin = true
 	user.Is_staff = true
+	err := user.SetAdminPermissions()
+	if err != nil {
+		return err
+	}
 
 	return this.Save(user).Error
 }
 
 type User struct {
 	BaseUser
-	Is_staff bool `gorm:"default:False"`
-	PermissionsMixin
+	Is_staff    bool         `gorm:"default:False"`
+	Groups      []Group      `gorm:"many2many:user_groups;"`
+	Permissions []Permission `gorm:"many2many:user_permissions;"`
 
 	UserManager `gorm:"-"`
 }
 
 func (this *User) SendEmail() error {
 	return nil
+}
+
+func (this *User) GetAllPermissions() ([]Permission, error) {
+	var perms []Permission
+	if this.Is_Admin {
+		perms = make([]Permission, 0)
+		err := this.UserManager.GetQueryset(&perms).Error
+		if err != nil {
+			return nil, err
+		}
+	} else if this.Is_staff {
+		perms = this.Permissions
+	} else {
+
+	}
+	return perms, nil
+}
+
+func (this *User) SetAdminPermissions() error {
+	var perms []Permission
+	if this.Is_Admin {
+		perms = make([]Permission, 0)
+		err := this.UserManager.Manager.GetQueryset(&perms).Error
+		if err != nil {
+			return err
+		}
+
+		this.Permissions = perms
+	}
+	return nil
+}
+
+func (this *User) GetGroupPermissions() ([]Permission, error) {
+	return nil, nil
+}
+
+func (this *User) UserHasPermission() bool {
+	return false
 }
 
 type AnonymousUser struct {
@@ -120,4 +158,16 @@ func (this *AnonymousUser) SetPassword(rawpassword string) error {
 
 func (this *AnonymousUser) CheckPassword(rawPassword string) bool {
 	return true
+}
+
+func (this *AnonymousUser) GetAllPermissions() ([]Permission, error) {
+	return nil, nil
+}
+
+func (this *AnonymousUser) GetGroupPermissions() ([]Permission, error) {
+	return nil, nil
+}
+
+func (this *AnonymousUser) UserHasPermission() bool {
+	return false
 }
