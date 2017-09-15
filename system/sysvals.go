@@ -10,7 +10,7 @@ const (
 
 	RESPONSE = "RESPONSE"
 
-	PERMITIONINFO = "perm"
+	PERMITIONINFO = "perms"
 )
 
 type SessionStatus int

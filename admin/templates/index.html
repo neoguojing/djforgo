@@ -78,6 +78,11 @@
 					<li><h4>UserName:</h4></li>
 					{% endif %}
 					<li>{{ user.Name }}</li>
+					<li>
+						{% if 'edit_group' in perms.auth %}
+						fuck
+						{% endif %}
+					</li>
 				</ul>
 			</div>
 			{% if user.Is_Admin %}

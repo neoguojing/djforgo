@@ -14,8 +14,22 @@ func PermissionWrapper(user IUser) pongo2.Context {
 		l4g.Error(err)
 	}
 
-	_ = perms
-	return nil
+	permMap := make(map[string][]string)
+	for _, perm := range perms {
+		app, op := perm.Wrapper()
+		if app == "" || op == "" {
+			continue
+		}
+
+		if _, ok := permMap[app]; !ok {
+			ops := make([]string, 0)
+			permMap[app] = ops
+		}
+
+		permMap[app] = append(permMap[app], op)
+	}
+	l4g.Debug(permMap)
+	return pongo2.Context{system.PERMITIONINFO: permMap}
 }
 
 func Auth_Context(r *http.Request, tcontext pongo2.Context) pongo2.Context {
@@ -26,6 +40,7 @@ func Auth_Context(r *http.Request, tcontext pongo2.Context) pongo2.Context {
 	}
 
 	userContext := pongo2.Context{system.USERINFO: userObj}
+	userContext.Update(PermissionWrapper(userObj.(IUser)))
 	if tcontext == nil {
 		return userContext
 	}

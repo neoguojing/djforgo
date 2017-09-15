@@ -39,6 +39,8 @@ func (this *Permission) Wrapper() (string, string) {
 		return "", ""
 	}
 
+	this.Content = content
+
 	return content.AppLabel, this.CodeName
 }
 
