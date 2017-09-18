@@ -84,7 +84,7 @@ func GetUsers(r *http.Request) []User {
 	return nil
 }
 
-func GetAllPermitions(r *http.Request) []Permission {
+func GetAllPermitionsOfUser(r *http.Request) []Permission {
 	user := context.Get(r, system.USERINFO)
 	if user == nil {
 		return nil
@@ -95,7 +95,7 @@ func GetAllPermitions(r *http.Request) []Permission {
 		if userObj.Is_Admin {
 			permitions, err := userObj.GetAllPermissions()
 			if err != nil {
-				l4g.Error("GetAllPermitions", err)
+				l4g.Error("GetAllPermitionsOfUser", err)
 				return nil
 			} else {
 				return permitions
@@ -105,7 +105,7 @@ func GetAllPermitions(r *http.Request) []Permission {
 	return nil
 }
 
-func GetAllGroups(r *http.Request) []Group {
+func GetAllGroupsOfUser(r *http.Request) []Group {
 	user := context.Get(r, system.USERINFO)
 	if user == nil {
 		return nil
@@ -113,14 +113,14 @@ func GetAllGroups(r *http.Request) []Group {
 
 	if user.(IUser).IsAuthenticated() {
 		userObj := user.(*User)
-		if userObj.Is_Admin {
-			groups := make([]Group, 0)
-			if err := dao.DB_Instance.Find(&groups).Error; err != nil {
-				l4g.Error(err)
-				return nil
-			}
+		groups, err := userObj.GetAllGroups()
+		if err != nil {
+			l4g.Error("GetAllGroupsOfUser", err)
+			return nil
+		} else {
 			return groups
 		}
 	}
+
 	return nil
 }

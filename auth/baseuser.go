@@ -18,6 +18,7 @@ type IUser interface {
 
 	GetAllPermissions() ([]Permission, error)
 	GetGroupPermissions() ([]Permission, error)
+	GetAllGroups() ([]Group, error)
 	UserHasPermission() bool
 }
 
@@ -27,11 +28,11 @@ type BaseUserManager struct {
 
 type BaseUser struct {
 	gorm.Model
-	Name      string `gorm:"type:varchar(50);unique"`
-	Email     string `gorm:"type:varchar(50);not null;unique"`
-	Password  string `gorm:"not null"`
-	Is_active bool   `gorm:"default:True"`
-	Is_Admin  bool   `gorm:"default:False"`
+	Name      string `gorm:"type:varchar(50);unique" schema:"name"`
+	Email     string `gorm:"type:varchar(50);not null;unique" schema:"email"`
+	Password  string `gorm:"not null" schema:"-"`
+	Is_active bool   `gorm:"default:True" schema:"isactive"`
+	Is_Admin  bool   `gorm:"default:False" schema:"isadmin"`
 
 	BaseUserManager `gorm:"-"`
 }
@@ -86,4 +87,8 @@ func (this *BaseUser) GetGroupPermissions() ([]Permission, error) {
 
 func (this *BaseUser) UserHasPermission() bool {
 	return false
+}
+
+func (this *BaseUser) GetAllGroups() ([]Group, error) {
+	return nil, nil
 }

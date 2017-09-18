@@ -13,10 +13,10 @@ type PermissionManager struct {
 
 type Permission struct {
 	gorm.Model
-	Name         string                  `gorm:"size:255"`
-	Content      contenttype.ContentType `gorm:"ForeignKey:Contentrefer;unique"`
-	Contentrefer uint
-	CodeName     string `gorm:"size:100;unique"`
+	Name         string                  `gorm:"size:255" schema:"name"`
+	Content      contenttype.ContentType `gorm:"ForeignKey:Contentrefer;unique" schema:"-"`
+	Contentrefer uint                    `schema:"contentid"`
+	CodeName     string                  `gorm:"size:100;unique" schema:"codename"`
 
 	PermissionManager `gorm:"-"`
 }
@@ -50,8 +50,8 @@ type GroupManager struct {
 
 type Group struct {
 	gorm.Model
-	Name        string       `gorm:"size:80;unique"`
-	Permissions []Permission `gorm:"many2many:group_permissions;"`
+	Name        string       `gorm:"size:80;unique" schema:"name"`
+	Permissions []Permission `gorm:"many2many:group_permissions;" schema:"permitions"`
 
 	GroupManager `gorm:"-"`
 }
@@ -88,9 +88,9 @@ func (this *UserManager) CreateAdminUser(user *User) error {
 
 type User struct {
 	BaseUser
-	Is_staff    bool         `gorm:"default:False"`
-	Groups      []Group      `gorm:"many2many:user_groups;"`
-	Permissions []Permission `gorm:"many2many:user_permissions;"`
+	Is_staff    bool         `gorm:"default:False" schema:"istaff"`
+	Groups      []Group      `gorm:"many2many:user_groups;" schema:"groups"`
+	Permissions []Permission `gorm:"many2many:user_permissions;" schema:"permitions"`
 
 	UserManager `gorm:"-"`
 }
@@ -132,6 +132,37 @@ func (this *User) GetAllPermissions() ([]Permission, error) {
 
 	}
 	return perms, nil
+}
+
+func (this *User) GetAllGroups() ([]Group, error) {
+	var groups []Group
+	if this.Is_Admin {
+		groups = make([]Group, 0)
+		err := this.UserManager.Manager.GetQueryset(&groups).Error
+		if err != nil {
+			return nil, l4g.Error("User::GetAllGroups", err)
+		}
+		this.Groups = groups
+	} else if this.Is_staff {
+		if this.Email != "" {
+			if this.ID == 0 {
+				err := this.DB.Select("id,name,email,is_active,is_admin,is_staff").
+					Where("email = ?", this.Email).First(this).Error
+				if err != nil {
+					return nil, l4g.Error("User::GetAllGroups", err)
+				}
+			}
+			err := this.DB.Model(this).Related(&groups, "Groups").Error
+			if err != nil {
+				return nil, l4g.Error("User::GetAllGroups", err)
+			}
+			this.Groups = groups
+		}
+
+	} else {
+
+	}
+	return groups, nil
 }
 
 func (this *User) SetPermissions() error {
@@ -204,4 +235,8 @@ func (this *AnonymousUser) GetGroupPermissions() ([]Permission, error) {
 
 func (this *AnonymousUser) UserHasPermission() bool {
 	return false
+}
+
+func (this *AnonymousUser) GetAllGroups() ([]Group, error) {
+	return nil, nil
 }

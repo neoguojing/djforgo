@@ -4,7 +4,6 @@ import ()
 
 type IForm interface {
 	Valid() error
-	isEmailValid() bool
 }
 
 type Form struct {

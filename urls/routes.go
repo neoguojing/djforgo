@@ -51,6 +51,13 @@ var Urls = Routes{
 		Pattern:     "/index",
 		HandlerFunc: middleware.MiddlewareHandlerFunc(admin.IndexHandler),
 	},
+	Route{
+		Name:        "edit",
+		Method1:     "GET",
+		Method2:     "POST",
+		Pattern:     "/edit/{model:[a-z]}/{id:[0-9]+}",
+		HandlerFunc: middleware.MiddlewareHandlerFunc(admin.EditHandler),
+	},
 }
 
 func newRouter() *mux.Router {
