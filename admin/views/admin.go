@@ -21,6 +21,8 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodPost {
 		ctx := pongo2.Context{"users": auth.GetUsers(r)}
+		ctx.Update(pongo2.Context{"permitions": auth.GetAllPermitions(r)})
+		ctx.Update(pongo2.Context{"groups": auth.GetAllGroups(r)})
 		templates.RenderTemplate(r, "./admin/templates/index.html", auth.Auth_Context(r, ctx))
 		return
 	}
