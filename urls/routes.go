@@ -55,7 +55,7 @@ var Urls = Routes{
 		Name:        "edit",
 		Method1:     "GET",
 		Method2:     "POST",
-		Pattern:     "/edit/{model:[a-z]}/{id:[0-9]+}",
+		Pattern:     "/edit/{model:[a-z]+}/{id:[0-9]+}",
 		HandlerFunc: middleware.MiddlewareHandlerFunc(admin.EditHandler),
 	},
 }

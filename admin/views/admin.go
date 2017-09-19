@@ -41,7 +41,8 @@ func EditHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	model := vars["model"]
 	id := vars["id"]
-
+	
+	l4g.Debug(model,id)
 	_ = model
 	_ = id
 

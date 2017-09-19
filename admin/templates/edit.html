@@ -10,11 +10,19 @@
 <link rel="icon" href="/static/favicon.ico" mce_href="/static/favicon.ico" type="image/x-icon">
 <!-- 新 Bootstrap 核心 CSS 文件 -->
 <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/select2.min.css" rel="stylesheet" />
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 <script src="/static/js/jquery.min.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="/static/js/bootstrap.min.js"></script>
 <script src="/static/js/bootstrap3-typeahead.js"></script>
+<script src="/static/js/select2.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	    $('.js-example-basic-multiple').select2();
+	});
+</script>
 
 </head>
 <body>
@@ -77,137 +85,94 @@
 	
 	</div>
 	
-	<!--<div class="row"  style="margin-top:5%">
-		<div class="panel panel-primary">
-			<div class="panel-heading">
-				<ul class="list-inline">
-					{% if user.Is_Admin %}
-				 	<li><h4>Administrator:</h4></li>
-					{% else %}
-					<li><h4>UserName:</h4></li>
-					{% endif %}
-					<li>{{ user.Name }}</li>
-					<li>
-						{% if 'edit_group' in perms.auth %}
-						fuck
-						{% endif %}
-					</li>
-				</ul>
-			</div>
-			{% if user.Is_Admin %}
-				<table class="table table-hover">
-					<tr>
-						<th>Id</th>
-						<th>Name</th>
-						<th>Email</th>
-						<th>Active</th>
-					</tr>
-				{% for singleuser in users %}
-			    	<tr>
-						<td>{{ singleuser.ID }}</td>
-						<td>{{ singleuser.Name }}</td>
-						<td>{{ singleuser.Email }}</td>
-						<td>{{ singleuser.Is_active }}</td>
-					</tr>
-				{% endfor %}
-				</table>
-			{% endif %}
-		</div>
-	</div>-->
 	<p style="margin-top:5%"></p>
 	
-	{% if user.Is_Admin %}
-	
-	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-	  <div class="panel panel-primary">
-	    <div class="panel-heading" role="tab" id="headingOne">
-	      <h4 class="panel-title">
-	        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-	          Users
-	        </a>
-	      </h4>
-	    </div>
-	    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-	        <table class="table table-hover table-condensed">
-					<tr>
-						<th>ID</th>
-						<th>Name</th>
-						<th>Email</th>
-						<th>Active</th>
-					</tr>
-				{% for singleuser in users %}
-			    	<tr>
-						<td>{{ singleuser.ID }}</td>
-						<td>{{ singleuser.Name }}</td>
-						<td>{{ singleuser.Email }}</td>
-						<td>{{ singleuser.Is_active }}</td>
-						
-						<td align="right">
-							<a href="#" class="btn btn-default" role="button">Delete</a>
-						</td>
-					</tr>
-				{% endfor %}
-			</table>
-	    </div>
-	  </div>
-	  <div class="panel panel-primary">
-	    <div class="panel-heading" role="tab" id="headingTwo">
-	      <h4 class="panel-title">
-	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-	          Permitions
-	        </a>
-	      </h4>
-	    </div>
-	    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-	        <table class="table table-hover table-condensed">
-					<tr>
-						<th>ID</th>
-						<th>Code</th>
-						<th>Name</th>
-					</tr>
-				{% for permition in permitions %}
-			    	<tr>
-						<td>{{ permition.ID }}</td>
-						<td>{{ permition.CodeName }}</td>
-						<td>{{ permition.Name }}</td>
-						
-						<td align="right">
-							<a href="#" class="btn btn-default" role="button">Delete</a>
-						</td>
-					</tr>
-				{% endfor %}
-			</table>
-	    </div>
-	  </div>
-	  <div class="panel panel-primary">
-	    <div class="panel-heading" role="tab" id="headingThree">
-	      <h4 class="panel-title">
-	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-	          Group
-	        </a>
-	      </h4>
-	    </div>
-	    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-	        <table class="table table-hover table-condensed">
-					<tr>
-						<th>ID</th>
-						<th>Name</th>
-					</tr>
-				{% for group in groups %}
-			    	<tr>
-						<td>{{ group.ID }}</td>
-						<td>{{ group.Name }}</td>
-						
-						<td align="right">
-							<a href="#" class="btn btn-default" role="button">Delete</a>
-						</td>
-					</tr>
-				{% endfor %}
-			</table>
-	    </div>
-	  </div>
+	<div class="row">
+		<h2 class="text-center" >Edit</h1>
 	</div>
-	{% else %}
+	{% if user.Is_active %}
+	{% if user.Is_staff %}
+	
+	<div class="row">
+		<form class="form-horizontal" action="/edit/user/{{ user.ID }}" method="POST">
+			<div class="form-group">
+			  <div class="col-sm-offset-4 col-sm-4">
+			    <input type="hidden" class="form-control" name="name" id="inputId" value="{{ user.ID }}">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label for="inputName" class="col-sm-2 control-label">Name</label>
+			  <div class="col-sm-4">
+			    <input type="text" class="form-control" name="name" id="inputName" value="{{ user.Name }}">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+			  <div class="col-sm-4">
+			    <input type="email" class="form-control" name="email" id="inputEmail" value="{{ user.Email }}">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <div class="col-sm-offset-2 col-sm-4">
+			    <div class="checkbox">
+			      	<label class="checkbox-inline">
+					{% if user.Is_Admin %}
+					  <input type="checkbox" name="isadmin" id="inlineCheckbox1" value="{{ user.Is_Admin }}" checked> is admin
+					{% endif %}
+					</label>
+					<label class="checkbox-inline">
+					{% if user.Is_staff %}
+					  <input type="checkbox" name="istaff" id="inlineCheckbox2" value="{{ user.Is_staff }}" checked> is staff 
+					{% endif %}
+					</label>
+					<label class="checkbox-inline">
+					{% if user.Is_active %}
+					  <input type="checkbox" name="isactive" id="inlineCheckbox3" value="{{ user.Is_active }}" checked> is active
+					{% else %}
+					  <input type="checkbox" name="isactive" id="inlineCheckbox3" value="{{ user.Is_active }}"> is active
+					{% endif %}
+					</label>
+			    </div>
+			  </div>
+			</div>
+			
+			{% if user.Is_Admin %}
+			<div class="form-group">
+				<label for="permitions" class="col-sm-2 control-label">Permitions</label>
+				<div class="col-sm-8">
+					<select multiple="multiple" class="form-control js-example-basic-multiple" id="permitions" name="permitions">
+					{% for perm in permitions %}
+					  <option id="{{ perm.ID }}" value="{{ perm }}" selected>
+						{{ perm.CodeName }}
+					  </option>
+					{% endfor %}
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="groups" class="col-sm-2 control-label">Groups</label>
+				<div class="col-sm-8">
+					<select multiple="multiple" class="form-control js-example-basic-multiple" id="groups" name="groups">
+					{% for group in groups %}
+					  <option id="{{ group.ID }}" value="{{ group }}" selected>
+						{{ group.Name }}
+					  </option>
+					{% endfor %}
+					</select>
+				</div>
+			</div>
+			{% endif %}
+			
+			<div class="form-group">
+			  <div class="col-sm-offset-2 col-sm-4">
+			    <button type="submit" class="btn btn-primary">Submit</button>
+			  </div>
+			</div>
+		</form>
+	</div>
+	
+	{% endif %}
 	{% endif %}
 
 </div>
