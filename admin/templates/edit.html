@@ -70,7 +70,7 @@
 			<li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.Name }} <span class="caret"></span></a>
 	          <ul class="dropdown-menu">
-	            <li><a href="#">Edit</a></li>
+	            <li><a href="/edit/user/{{ user.ID }}">Edit</a></li>
 	            <li><a href="#">Reset password</a></li>
 	            <li><a href="#">doing</a></li>
 	            <li role="separator" class="divider"></li>
@@ -94,22 +94,22 @@
 	{% if user.Is_staff %}
 	
 	<div class="row">
-		<form class="form-horizontal" action="/edit/user/{{ user.ID }}" method="POST">
+		<form class="form-horizontal" action="/edit/user/{{ targetuser.ID }}" method="POST">
 			<div class="form-group">
 			  <div class="col-sm-offset-4 col-sm-4">
-			    <input type="hidden" class="form-control" name="name" id="inputId" value="{{ user.ID }}">
+			    <input type="hidden" class="form-control" name="name" id="inputId" value="{{ targetuser.ID }}">
 			  </div>
 			</div>
 			<div class="form-group">
 			  <label for="inputName" class="col-sm-2 control-label">Name</label>
 			  <div class="col-sm-4">
-			    <input type="text" class="form-control" name="name" id="inputName" value="{{ user.Name }}">
+			    <input type="text" class="form-control" name="name" id="inputName" value="{{ targetuser.Name }}">
 			  </div>
 			</div>
 			<div class="form-group">
 			  <label for="inputEmail" class="col-sm-2 control-label">Email</label>
 			  <div class="col-sm-4">
-			    <input type="email" class="form-control" name="email" id="inputEmail" value="{{ user.Email }}">
+			    <input type="email" class="form-control" name="email" id="inputEmail" value="{{ targetuser.Email }}">
 			  </div>
 			</div>
 			<div class="form-group">
@@ -117,19 +117,19 @@
 			    <div class="checkbox">
 			      	<label class="checkbox-inline">
 					{% if user.Is_Admin %}
-					  <input type="checkbox" name="isadmin" id="inlineCheckbox1" value="{{ user.Is_Admin }}" checked> is admin
+					  <input type="checkbox" name="isadmin" id="inlineCheckbox1" value="{{ targetuser.Is_Admin }}" checked> is admin
 					{% endif %}
 					</label>
 					<label class="checkbox-inline">
 					{% if user.Is_staff %}
-					  <input type="checkbox" name="istaff" id="inlineCheckbox2" value="{{ user.Is_staff }}" checked> is staff 
+					  <input type="checkbox" name="istaff" id="inlineCheckbox2" value="{{ targetuser.Is_staff }}" checked> is staff 
 					{% endif %}
 					</label>
 					<label class="checkbox-inline">
 					{% if user.Is_active %}
-					  <input type="checkbox" name="isactive" id="inlineCheckbox3" value="{{ user.Is_active }}" checked> is active
+					  <input type="checkbox" name="isactive" id="inlineCheckbox3" value="{{ targetuser.Is_active }}" checked> is active
 					{% else %}
-					  <input type="checkbox" name="isactive" id="inlineCheckbox3" value="{{ user.Is_active }}"> is active
+					  <input type="checkbox" name="isactive" id="inlineCheckbox3" value="{{ targetuser.Is_active }}"> is active
 					{% endif %}
 					</label>
 			    </div>
@@ -138,10 +138,10 @@
 			
 			{% if user.Is_Admin %}
 			<div class="form-group">
-				<label for="permitions" class="col-sm-2 control-label">Permitions</label>
+				<label for="permitions" class="col-sm-2 control-label">Permitions {{ targetUser.Permissions.0.Name }}</label>
 				<div class="col-sm-8">
 					<select multiple="multiple" class="form-control js-example-basic-multiple" id="permitions" name="permitions">
-					{% for perm in permitions %}
+					{% for perm in targetUser.Permissions %}
 					  <option id="{{ perm.ID }}" value="{{ perm }}" selected>
 						{{ perm.CodeName }}
 					  </option>
@@ -154,7 +154,7 @@
 				<label for="groups" class="col-sm-2 control-label">Groups</label>
 				<div class="col-sm-8">
 					<select multiple="multiple" class="form-control js-example-basic-multiple" id="groups" name="groups">
-					{% for group in groups %}
+					{% for group in targetUser.Groups %}
 					  <option id="{{ group.ID }}" value="{{ group }}" selected>
 						{{ group.Name }}
 					  </option>

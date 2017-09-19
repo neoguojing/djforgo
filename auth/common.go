@@ -40,6 +40,17 @@ func GetUserByEmail(email *string) (IUser, error) {
 	return &user, err
 }
 
+func GetUserByID(id uint) (IUser, error) {
+
+	var user User
+	err := dao.DB_Instance.Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return nil, l4g.Error(err)
+	}
+
+	return &user, err
+}
+
 func Login_Check(loginform *UserLoginForm) (IUser, error) {
 	var user IUser
 	user, err := GetUserByEmail(&loginform.Email)
