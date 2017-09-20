@@ -51,7 +51,6 @@ func (this *Manager) Save(in interface{}) *gorm.DB {
 	return db
 }
 
-
 func (this *Manager) Delete(in interface{}) *gorm.DB {
 	this.Init()
 

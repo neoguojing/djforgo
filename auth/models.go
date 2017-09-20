@@ -80,6 +80,13 @@ func (this *UserManager) GetQueryset(out interface{}) *gorm.DB {
 	return db
 }
 
+func (this *UserManager) Update(user *User) *gorm.DB {
+	this.Init()
+	db := this.DB.Model(user).Updates(*user)
+
+	return db
+}
+
 func (this *UserManager) CreateUser(user *User) error {
 	user.Is_Admin = false
 	user.Is_staff = false

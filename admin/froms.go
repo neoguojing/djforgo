@@ -24,7 +24,7 @@ func (this *UserEditForm) Save() error {
 		this.AddGroup(v)
 	}
 
-	return this.User.Save(&this.User).Error
+	return this.Update(&this.User).Error
 }
 
 func (this *UserEditForm) Valid() error {
