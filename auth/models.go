@@ -4,11 +4,23 @@ import (
 	"djforgo/auth/contenttype"
 	"djforgo/dao"
 	l4g "github.com/alecthomas/log4go"
+	set "github.com/deckarep/golang-set"
 	"github.com/jinzhu/gorm"
 )
 
 type PermissionManager struct {
 	dao.Manager
+}
+
+func (this *PermissionManager) GetAllPermitions() ([]Permission, error) {
+	permitions := make([]Permission, 0)
+	err := this.GetQueryset(&permitions).Error
+	if err != nil {
+		l4g.Error("PermissionManager::GetAllPermitions %v", err)
+		return nil, err
+	}
+
+	return permitions, nil
 }
 
 type Permission struct {
@@ -113,6 +125,8 @@ func (this *User) GetAllPermissions() ([]Permission, error) {
 		}
 		this.Permissions = perms
 	} else if this.Is_staff {
+		this.Init()
+		
 		if this.Email != "" {
 			if this.ID == 0 {
 				err := this.DB.Select("id,name,email,is_active,is_admin,is_staff").
@@ -121,6 +135,7 @@ func (this *User) GetAllPermissions() ([]Permission, error) {
 					return nil, l4g.Error("User::GetAllPermissions", err)
 				}
 			}
+			perms = make([]Permission, 0)
 			err := this.DB.Model(this).Related(&perms, "Permissions").Error
 			if err != nil {
 				return nil, l4g.Error("User::GetAllPermissions", err)
@@ -144,6 +159,7 @@ func (this *User) GetAllGroups() ([]Group, error) {
 		}
 		this.Groups = groups
 	} else if this.Is_staff {
+		this.Init()
 		if this.Email != "" {
 			if this.ID == 0 {
 				err := this.DB.Select("id,name,email,is_active,is_admin,is_staff").
@@ -152,6 +168,7 @@ func (this *User) GetAllGroups() ([]Group, error) {
 					return nil, l4g.Error("User::GetAllGroups", err)
 				}
 			}
+			groups = make([]Group, 0)
 			err := this.DB.Model(this).Related(&groups, "Groups").Error
 			if err != nil {
 				return nil, l4g.Error("User::GetAllGroups", err)
@@ -165,26 +182,74 @@ func (this *User) GetAllGroups() ([]Group, error) {
 	return groups, nil
 }
 
-func (this *User) SetPermissions() error {
-	var perms []Permission
-	if this.Is_Admin {
-		perms = make([]Permission, 0)
-		err := this.UserManager.Manager.GetQueryset(&perms).Error
-		if err != nil {
-			return err
-		}
-
-		this.Permissions = perms
-	}
-	return nil
-}
-
 func (this *User) GetGroupPermissions() ([]Permission, error) {
 	return nil, nil
 }
 
 func (this *User) UserHasPermission() bool {
 	return false
+}
+
+func (this *User) GetUnUsedPermitions() ([]interface{}, error) {
+	if this.IsAdmin() {
+		return nil, nil
+	}
+
+	permissions, err := this.GetAllPermissions()
+	if err != nil {
+		return nil, err
+	}
+
+	inUseSet := set.NewSet()
+	for _, v := range permissions {
+		inUseSet.Add(v)
+	}
+
+	allPermitons, err1 := GetAllPermitions()
+	if err1 != nil {
+		return nil, err1
+	}
+
+	fullSet := set.NewSet()
+	for _, v := range allPermitons {
+		fullSet.Add(v)
+	}
+
+	noUseSet := fullSet.Difference(inUseSet)
+	return noUseSet.ToSlice(), nil
+}
+
+func (this *User) GetUnUsedGroups() ([]interface{}, error) {
+	if this.IsAdmin() {
+		return nil, nil
+	}
+
+	groups, err := this.GetAllGroups()
+	if err != nil {
+		return nil, err
+	}
+
+	all, err1 := GetAllGroups()
+	if err1 != nil {
+		return nil, err1
+	}
+
+	rtn := make([]interface{}, 0)
+	for _, v1 := range all {
+		hasSameId := false
+		for _, v2 := range groups {
+			if v1.ID == v2.ID {
+				hasSameId = true
+				goto Jump
+			}
+		}
+	Jump:
+		if !hasSameId {
+			rtn = append(rtn, v1)
+		}
+	}
+
+	return rtn, nil
 }
 
 type AnonymousUser struct {
@@ -238,5 +303,17 @@ func (this *AnonymousUser) UserHasPermission() bool {
 }
 
 func (this *AnonymousUser) GetAllGroups() ([]Group, error) {
+	return nil, nil
+}
+
+func (this *AnonymousUser) IsAdmin() bool {
+	return false
+}
+
+func (this *AnonymousUser) GetUnUsedPermitions() ([]interface{}, error) {
+	return nil, nil
+}
+
+func (this *AnonymousUser) GetUnUsedGroups() ([]interface{}, error) {
 	return nil, nil
 }

@@ -13,6 +13,7 @@ type IUser interface {
 	SetEmail(string)
 	IsAnonymous() bool
 	IsAuthenticated() bool
+	IsAdmin() bool
 	SetPassword(string) error
 	CheckPassword(string) bool
 
@@ -20,6 +21,8 @@ type IUser interface {
 	GetGroupPermissions() ([]Permission, error)
 	GetAllGroups() ([]Group, error)
 	UserHasPermission() bool
+	GetUnUsedPermitions() ([]interface{}, error)
+	GetUnUsedGroups() ([]interface{}, error)
 }
 
 type BaseUserManager struct {
@@ -90,5 +93,17 @@ func (this *BaseUser) UserHasPermission() bool {
 }
 
 func (this *BaseUser) GetAllGroups() ([]Group, error) {
+	return nil, nil
+}
+
+func (this *BaseUser) IsAdmin() bool {
+	return this.Is_Admin
+}
+
+func (this *BaseUser) GetUnUsedPermitions() ([]interface{}, error) {
+	return nil, nil
+}
+
+func (this *BaseUser) GetUnUsedGroups() ([]interface{}, error) {
 	return nil, nil
 }

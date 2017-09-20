@@ -135,3 +135,23 @@ func GetAllGroupsOfUser(r *http.Request) []Group {
 
 	return nil
 }
+
+func GetAllPermitions() ([]Permission, error) {
+	permitions := make([]Permission, 0)
+	err := dao.DB_Instance.Find(&permitions).Error
+	if err != nil {
+		return nil, l4g.Error(err)
+	}
+
+	return permitions, nil
+}
+
+func GetAllGroups() ([]Group, error) {
+	groups := make([]Group, 0)
+	err := dao.DB_Instance.Find(&groups).Error
+	if err != nil {
+		return nil, l4g.Error(err)
+	}
+
+	return groups, nil
+}

@@ -116,17 +116,21 @@
 			  <div class="col-sm-offset-2 col-sm-4">
 			    <div class="checkbox">
 			      	<label class="checkbox-inline">
-					{% if user.Is_Admin %}
+					{% if targetuser.Is_Admin %}
 					  <input type="checkbox" name="isadmin" id="inlineCheckbox1" value="{{ targetuser.Is_Admin }}" checked> is admin
+					{% else %}
+					  <input type="checkbox" name="isadmin" id="inlineCheckbox1" value="{{ targetuser.Is_Admin }}"> is admin
 					{% endif %}
 					</label>
 					<label class="checkbox-inline">
-					{% if user.Is_staff %}
+					{% if targetuser.Is_staff %}
 					  <input type="checkbox" name="istaff" id="inlineCheckbox2" value="{{ targetuser.Is_staff }}" checked> is staff 
+					{% else %}
+					  <input type="checkbox" name="istaff" id="inlineCheckbox2" value="{{ targetuser.Is_staff }}"> is staff 
 					{% endif %}
 					</label>
 					<label class="checkbox-inline">
-					{% if user.Is_active %}
+					{% if targetuser.Is_active %}
 					  <input type="checkbox" name="isactive" id="inlineCheckbox3" value="{{ targetuser.Is_active }}" checked> is active
 					{% else %}
 					  <input type="checkbox" name="isactive" id="inlineCheckbox3" value="{{ targetuser.Is_active }}"> is active
@@ -136,13 +140,17 @@
 			  </div>
 			</div>
 			
-			{% if user.Is_Admin %}
 			<div class="form-group">
 				<label for="permitions" class="col-sm-2 control-label">Permitions {{ targetUser.Permissions.0.Name }}</label>
 				<div class="col-sm-8">
 					<select multiple="multiple" class="form-control js-example-basic-multiple" id="permitions" name="permitions">
-					{% for perm in targetUser.Permissions %}
+					{% for perm in permissions %}
 					  <option id="{{ perm.ID }}" value="{{ perm }}" selected>
+						{{ perm.CodeName }}
+					  </option>
+					{% endfor %}
+					{% for perm in permissions_without %}
+					  <option id="{{ perm.ID }}" value="{{ perm }}">
 						{{ perm.CodeName }}
 					  </option>
 					{% endfor %}
@@ -154,15 +162,19 @@
 				<label for="groups" class="col-sm-2 control-label">Groups</label>
 				<div class="col-sm-8">
 					<select multiple="multiple" class="form-control js-example-basic-multiple" id="groups" name="groups">
-					{% for group in targetUser.Groups %}
+					{% for group in groups %}
 					  <option id="{{ group.ID }}" value="{{ group }}" selected>
+						{{ group.Name }}
+					  </option>
+					{% endfor %}
+					{% for group in groups_without %}
+					  <option id="{{ group.ID }}" value="{{ group }}">
 						{{ group.Name }}
 					  </option>
 					{% endfor %}
 					</select>
 				</div>
 			</div>
-			{% endif %}
 			
 			<div class="form-group">
 			  <div class="col-sm-offset-2 col-sm-4">

@@ -55,12 +55,12 @@ func parseEditParam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	currentUser := context.Get(r, system.USERINFO)
-	if currentUser == nil {
-		l4g.Error("parseEditParam: currentUser was nil")
+	ctxUser := context.Get(r, system.USERINFO)
+	if ctxUser == nil {
+		l4g.Error("parseEditParam: ctxUser was nil")
 		return
 	}
-
+	currentUser := ctxUser.(*auth.User)
 	ctx := pongo2.Context{}
 
 	switch model {
@@ -72,8 +72,9 @@ func parseEditParam(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var targetUser auth.IUser
-		if currentUser.(*auth.User).ID == uint(reqId) {
-			targetUser = currentUser.(*auth.User)
+
+		if currentUser.ID == uint(reqId) {
+			targetUser = currentUser
 		} else {
 			targetUser, err = auth.GetUserByID(uint(reqId))
 			if err != nil {
@@ -81,21 +82,35 @@ func parseEditParam(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		targetUser.GetAllPermissions()
-		targetUser.GetAllGroups()
+		permissions, _ := targetUser.GetAllPermissions()
+		groups, _ := targetUser.GetAllGroups()
 		ctx.Update(pongo2.Context{"targetuser": targetUser})
+		ctx.Update(pongo2.Context{"groups": groups})
+		ctx.Update(pongo2.Context{"permissions": permissions})
 
-	case "permition":
-		currentUser.(*auth.User).GetAllPermissions()
+		if currentUser.IsAdmin() && currentUser.ID != uint(reqId) {
+			unUsedPermitions, err := targetUser.GetUnUsedPermitions()
+			if err == nil && unUsedPermitions != nil {
+				ctx.Update(pongo2.Context{"permissions_without": unUsedPermitions})
+			}
+
+			unUsedGroups, err := targetUser.GetUnUsedGroups()
+			if err == nil && unUsedGroups != nil {
+				ctx.Update(pongo2.Context{"groups_without": unUsedGroups})
+			}
+		}
+
+	case "perm":
+		currentUser.GetAllPermissions()
 		ctx.Update(pongo2.Context{"targetuser": currentUser})
 	case "group":
-		currentUser.(*auth.User).GetAllGroups()
+		currentUser.GetAllGroups()
 		ctx.Update(pongo2.Context{"targetuser": currentUser})
 	default:
 		l4g.Error("parseEditParams: invalid model")
 		return
 	}
-	
+
 	templates.RenderTemplate(r, "./admin/templates/edit.html", auth.Auth_Context(r, ctx))
 }
 
