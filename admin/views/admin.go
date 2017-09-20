@@ -43,6 +43,9 @@ func EditHandler(w http.ResponseWriter, r *http.Request) {
 		parseEditParam(w, r)
 		return
 	}
+
+	parseEditForms(w, r)
+	return
 }
 
 func parseEditParam(w http.ResponseWriter, r *http.Request) {
@@ -114,25 +117,37 @@ func parseEditParam(w http.ResponseWriter, r *http.Request) {
 	templates.RenderTemplate(r, "./admin/templates/edit.html", auth.Auth_Context(r, ctx))
 }
 
-func parseEditForms(model string, w http.ResponseWriter, r *http.Request) {
+func parseEditForms(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	model := vars["model"]
+	id := vars["id"]
+
+	if id == "" {
+		l4g.Error("parseEditParam: invalid id param")
+		return
+	}
+
 	switch model {
 	case "user":
 		err := r.ParseForm()
 		if err != nil {
-			l4g.Error(err)
+			l4g.Error("ParseForm,%v", err)
 			return
 		}
+
 		var userFrom admin.UserEditForm
 		err = decoder.Decode(&userFrom, r.PostForm)
+		l4g.Debug("***", userFrom, r.PostForm)
 		if err != nil {
-			l4g.Error(err)
+			l4g.Error("Decode ,%v", err)
 			return
 		}
 
 		if userFrom.Valid() != nil {
-			templates.RedirectTo(w, r.RequestURI)
 			return
 		}
+
+		userFrom.Save()
 
 	case "permition":
 	case "group":

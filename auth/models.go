@@ -63,7 +63,7 @@ type GroupManager struct {
 type Group struct {
 	gorm.Model
 	Name        string       `gorm:"size:80;unique" schema:"name"`
-	Permissions []Permission `gorm:"many2many:group_permissions;" schema:"permitions"`
+	Permissions []Permission `gorm:"many2many:group_permissions;"`
 
 	GroupManager `gorm:"-"`
 }
@@ -101,8 +101,8 @@ func (this *UserManager) CreateAdminUser(user *User) error {
 type User struct {
 	BaseUser
 	Is_staff    bool         `gorm:"default:False" schema:"istaff"`
-	Groups      []Group      `gorm:"many2many:user_groups;" schema:"groups"`
-	Permissions []Permission `gorm:"many2many:user_permissions;" schema:"permitions"`
+	Groups      []Group      `gorm:"many2many:user_groups;"`
+	Permissions []Permission `gorm:"many2many:user_permissions;"`
 
 	UserManager `gorm:"-"`
 }
@@ -126,7 +126,7 @@ func (this *User) GetAllPermissions() ([]Permission, error) {
 		this.Permissions = perms
 	} else if this.Is_staff {
 		this.Init()
-		
+
 		if this.Email != "" {
 			if this.ID == 0 {
 				err := this.DB.Select("id,name,email,is_active,is_admin,is_staff").
@@ -217,6 +217,36 @@ func (this *User) GetUnUsedPermitions() ([]interface{}, error) {
 
 	noUseSet := fullSet.Difference(inUseSet)
 	return noUseSet.ToSlice(), nil
+}
+
+func (this *User) AddPermition(id uint) bool {
+	tempPerm := Permission{}
+	tempPerm.ID = id
+
+	if err := this.Manager.GetQueryset(&tempPerm).Error; err != nil {
+		l4g.Error("User::AddPermition", err)
+	}
+
+	if this.Permissions == nil {
+		this.Permissions = make([]Permission, 0)
+	}
+	this.Permissions = append(this.Permissions, tempPerm)
+	return true
+}
+
+func (this *User) AddGroup(id uint) bool {
+	tempGroup := Group{}
+	tempGroup.ID = id
+
+	if err := this.Manager.GetQueryset(&tempGroup).Error; err != nil {
+		l4g.Error("User::AddGroup", err)
+	}
+
+	if this.Groups == nil {
+		this.Groups = make([]Group, 0)
+	}
+	this.Groups = append(this.Groups, tempGroup)
+	return true
 }
 
 func (this *User) GetUnUsedGroups() ([]interface{}, error) {

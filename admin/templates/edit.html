@@ -97,7 +97,7 @@
 		<form class="form-horizontal" action="/edit/user/{{ targetuser.ID }}" method="POST">
 			<div class="form-group">
 			  <div class="col-sm-offset-4 col-sm-4">
-			    <input type="hidden" class="form-control" name="name" id="inputId" value="{{ targetuser.ID }}">
+			    <input type="hidden" class="form-control" name="id" id="inputId" value="{{ targetuser.ID }}">
 			  </div>
 			</div>
 			<div class="form-group">
@@ -141,16 +141,16 @@
 			</div>
 			
 			<div class="form-group">
-				<label for="permitions" class="col-sm-2 control-label">Permitions {{ targetUser.Permissions.0.Name }}</label>
+				<label for="permitions" class="col-sm-2 control-label">Permitions</label>
 				<div class="col-sm-8">
-					<select multiple="multiple" class="form-control js-example-basic-multiple" id="permitions" name="permitions">
+					<select multiple="multiple" class="form-control js-example-basic-multiple" id="permitions" name="f_permitions">
 					{% for perm in permissions %}
-					  <option id="{{ perm.ID }}" value="{{ perm }}" selected>
+					  <option id="{{ perm.ID }}" value="{{ perm.ID }}" selected>
 						{{ perm.CodeName }}
 					  </option>
 					{% endfor %}
 					{% for perm in permissions_without %}
-					  <option id="{{ perm.ID }}" value="{{ perm }}">
+					  <option id="{{ perm.ID }}" value="{{ perm.ID }}">
 						{{ perm.CodeName }}
 					  </option>
 					{% endfor %}
@@ -161,14 +161,14 @@
 			<div class="form-group">
 				<label for="groups" class="col-sm-2 control-label">Groups</label>
 				<div class="col-sm-8">
-					<select multiple="multiple" class="form-control js-example-basic-multiple" id="groups" name="groups">
+					<select multiple="multiple" class="form-control js-example-basic-multiple" id="groups" name="f_groups">
 					{% for group in groups %}
-					  <option id="{{ group.ID }}" value="{{ group }}" selected>
+					  <option id="{{ group.ID }}" value="{{ group.ID }}" selected>
 						{{ group.Name }}
 					  </option>
 					{% endfor %}
 					{% for group in groups_without %}
-					  <option id="{{ group.ID }}" value="{{ group }}">
+					  <option id="{{ group.ID }}" value="{{ group.ID }}">
 						{{ group.Name }}
 					  </option>
 					{% endfor %}
