@@ -82,7 +82,7 @@ func (this *UserManager) GetQueryset(out interface{}) *gorm.DB {
 
 func (this *UserManager) Update(user *User) *gorm.DB {
 	this.Init()
-	db := this.DB.Model(user).Updates(*user)
+	db := this.DB.Set("gorm:save_associations", false).Model(user).Updates(*user)
 
 	return db
 }
@@ -226,33 +226,85 @@ func (this *User) GetUnUsedPermitions() ([]interface{}, error) {
 	return noUseSet.ToSlice(), nil
 }
 
-func (this *User) AddPermition(id uint) bool {
-	tempPerm := Permission{}
-	tempPerm.ID = id
+func (this *User) AddPermitions(ids []uint) bool {
+	this.Init()
 
-	if err := this.Manager.GetQueryset(&tempPerm).Error; err != nil {
-		l4g.Error("User::AddPermition", err)
+	tx := this.DB.Begin()
+
+	for _, v := range ids {
+		perm := Permission{}
+		perm.ID = v
+		if err := tx.Model(this).Association("Permissions").Append(perm).Error; err != nil {
+			tx.Rollback()
+			l4g.Error("AddPermitions:%v", err)
+			return false
+		}
 	}
 
-	if this.Permissions == nil {
-		this.Permissions = make([]Permission, 0)
-	}
-	this.Permissions = append(this.Permissions, tempPerm)
+	tx.Commit()
 	return true
 }
 
-func (this *User) AddGroup(id uint) bool {
-	tempGroup := Group{}
-	tempGroup.ID = id
+//ids is the permitions need to delete
+func (this *User) DelPermitions(ids []uint) bool {
+	this.Init()
 
-	if err := this.Manager.GetQueryset(&tempGroup).Error; err != nil {
-		l4g.Error("User::AddGroup", err)
+	tx := this.DB.Begin()
+
+	for _, v := range ids {
+		perm := Permission{}
+		perm.ID = v
+		if err := tx.Model(this).Association("Permissions").Delete(perm).Error; err != nil {
+			tx.Rollback()
+			l4g.Error("DelPermitions:%v", err)
+			return false
+		}
 	}
 
-	if this.Groups == nil {
-		this.Groups = make([]Group, 0)
+	tx.Commit()
+
+	this.Permissions = this.Permissions[:0]
+	return true
+}
+
+func (this *User) AddGroups(ids []uint) bool {
+	this.Init()
+
+	tx := this.DB.Begin()
+
+	for _, v := range ids {
+		group := Group{}
+		group.ID = v
+		if err := tx.Model(this).Association("Groups").Append(group).Error; err != nil {
+			tx.Rollback()
+			l4g.Error("AddGroups:%v", err)
+			return false
+		}
 	}
-	this.Groups = append(this.Groups, tempGroup)
+
+	tx.Commit()
+	return true
+}
+
+//ids is the groups` id need to delete
+func (this *User) DelGroups(ids []uint) bool {
+	this.Init()
+
+	tx := this.DB.Begin()
+
+	for _, v := range ids {
+		group := Group{}
+		group.ID = v
+		if err := tx.Model(this).Association("Groups").Delete(group).Error; err != nil {
+			tx.Rollback()
+			l4g.Error("DelGroups:%v", err)
+			return false
+		}
+	}
+
+	tx.Commit()
+
+	this.Groups = this.Groups[:0]
 	return true
 }
 

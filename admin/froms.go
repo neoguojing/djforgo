@@ -1,8 +1,8 @@
 package admin
 
 import (
-	//l4g "github.com/alecthomas/log4go"
 	"djforgo/auth"
+	l4g "github.com/alecthomas/log4go"
 )
 
 type UserEditForm struct {
@@ -16,15 +16,57 @@ func (this *UserEditForm) Init() error {
 }
 
 func (this *UserEditForm) Save() error {
-	for _, v := range this.PermissionID {
-		this.AddPermition(v)
+	_, err := this.GetAllPermissions()
+	if err != nil {
+		return err
 	}
 
-	for _, v := range this.GroupID {
-		this.AddGroup(v)
+	delPermitionIds := make([]uint, 0)
+	for _, id := range this.PermissionID {
+		for _, v := range this.Permissions {
+			if id == v.ID {
+				v.ID = 0
+			}
+		}
 	}
 
-	return this.Update(&this.User).Error
+	for _, v := range this.Permissions {
+		if 0 != v.ID {
+			delPermitionIds = append(delPermitionIds, v.ID)
+		}
+	}
+
+	this.DelPermitions(delPermitionIds)
+	this.AddPermitions(this.PermissionID)
+
+	_, err = this.GetAllGroups()
+	if err != nil {
+		return err
+	}
+
+	delGroupIds := make([]uint, 0)
+	for _, id := range this.GroupID {
+		for _, v := range this.Groups {
+			if id == v.ID {
+				v.ID = 0
+			}
+		}
+	}
+
+	for _, v := range this.Groups {
+		if 0 != v.ID {
+			delGroupIds = append(delGroupIds, v.ID)
+		}
+	}
+
+	this.DelGroups(delGroupIds)
+	this.AddGroups(this.GroupID)
+
+	err = this.Update(&this.User).Error
+	if err != nil {
+		l4g.Error("UserEditForm:Save %v", err)
+	}
+	return err
 }
 
 func (this *UserEditForm) Valid() error {

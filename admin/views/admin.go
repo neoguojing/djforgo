@@ -149,7 +149,7 @@ func parseEditForms(w http.ResponseWriter, r *http.Request) {
 
 		userFrom.Save()
 		templates.RedirectTo(w, "/edit/user/"+id)
-		
+
 	case "permition":
 	case "group":
 	default:
