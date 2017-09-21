@@ -20,12 +20,12 @@ func (this *SessionMiddleware) ProcessRequest(w http.ResponseWriter, r *http.Req
 	if session == nil {
 		context.Set(r, system.SESSIONSTATUS, system.Session_Invalid)
 	} else {
-		username := session.Values[system.SESSIONINFO]
-		if username == nil {
+		uid := session.Values[system.SESSIONINFO]
+		if uid == nil {
 			context.Set(r, system.SESSIONSTATUS, system.Session_New)
 		} else {
 			context.Set(r, system.SESSIONSTATUS, system.Session_Exist)
-			context.Set(r, system.SESSIONINFO, session.Values[system.SESSIONINFO])
+			context.Set(r, system.SESSIONINFO, uid)
 		}
 	}
 
@@ -35,12 +35,12 @@ func (this *SessionMiddleware) ProcessRequest(w http.ResponseWriter, r *http.Req
 
 func (this *SessionMiddleware) ProcessResponse(w http.ResponseWriter, r *http.Request) {
 	setSession := func() {
-		username := context.Get(r, system.SESSIONINFO)
-		if username == nil {
-			l4g.Error("SessionMiddleware:ProcessResponse invalid SESSIONINFO", username)
+		uid := context.Get(r, system.SESSIONINFO)
+		if uid == nil {
+			l4g.Error("SessionMiddleware:ProcessResponse invalid SESSIONINFO", uid)
 			return
 		}
-		G_SessionStore.SetSession(w, r, system.QasConfig.Session.MaxAge, system.SESSIONINFO, username)
+		G_SessionStore.SetSession(w, r, system.QasConfig.Session.MaxAge, system.SESSIONINFO, uid)
 	}
 	ssn_status := context.Get(r, system.SESSIONSTATUS).(system.SessionStatus)
 	switch ssn_status {

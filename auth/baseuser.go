@@ -7,6 +7,7 @@ import (
 )
 
 type IUser interface {
+	GetUserID() uint
 	GetUserName() string
 	SetUserName(string)
 	GetEmail() string
@@ -38,6 +39,10 @@ type BaseUser struct {
 	Is_Admin  bool   `gorm:"default:False" schema:"isadmin"`
 
 	BaseUserManager `gorm:"-"`
+}
+
+func (this *BaseUser) GetUserID() uint {
+	return this.ID
 }
 
 func (this *BaseUser) GetUserName() string {

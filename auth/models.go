@@ -344,6 +344,10 @@ func (this *User) GetUnUsedGroups() ([]interface{}, error) {
 type AnonymousUser struct {
 }
 
+func (this *AnonymousUser) GetUserID() uint {
+	return 0
+}
+
 func (this *AnonymousUser) GetUserName() string {
 	return ""
 }

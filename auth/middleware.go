@@ -13,8 +13,8 @@ type AuthenticationMiddleware struct {
 func (this *AuthenticationMiddleware) ProcessRequest(w http.ResponseWriter, r *http.Request) {
 	sessionStatu := context.Get(r, system.SESSIONSTATUS).(system.SessionStatus)
 	if sessionStatu == system.Session_Exist {
-		username := context.Get(r, system.SESSIONINFO).(string)
-		user, err := GetUserByUsername(&username)
+		uid := context.Get(r, system.SESSIONINFO).(uint)
+		user, err := GetUserByID(uid)
 		if err == nil {
 			context.Set(r, system.USERINFO, user)
 		}

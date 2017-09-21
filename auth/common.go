@@ -45,7 +45,7 @@ func GetUserByID(id uint) (IUser, error) {
 	var user User
 	err := dao.DB_Instance.Where("id = ?", id).First(&user).Error
 	if err != nil {
-		return nil, l4g.Error(err)
+		return nil, l4g.Error("GetUserByID", err)
 	}
 
 	return &user, err

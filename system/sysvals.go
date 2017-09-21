@@ -4,7 +4,7 @@ import ()
 
 const (
 	SESSIONSTATUS = "SESSIONSTATUS"
-	SESSIONINFO   = "username"
+	SESSIONINFO   = "userid"
 
 	USERINFO = "user"
 

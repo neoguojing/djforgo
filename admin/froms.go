@@ -16,53 +16,56 @@ func (this *UserEditForm) Init() error {
 }
 
 func (this *UserEditForm) Save() error {
-	_, err := this.GetAllPermissions()
-	if err != nil {
-		return err
-	}
+	if !this.IsAdmin() {
+		_, err := this.GetAllPermissions()
+		if err != nil {
+			return err
+		}
 
-	delPermitionIds := make([]uint, 0)
-	for _, id := range this.PermissionID {
+		delPermitionIds := make([]uint, 0)
+		for _, id := range this.PermissionID {
+			for _, v := range this.Permissions {
+				if id == v.ID {
+					v.ID = 0
+				}
+			}
+		}
+
 		for _, v := range this.Permissions {
-			if id == v.ID {
-				v.ID = 0
+			if 0 != v.ID {
+				delPermitionIds = append(delPermitionIds, v.ID)
 			}
 		}
-	}
 
-	for _, v := range this.Permissions {
-		if 0 != v.ID {
-			delPermitionIds = append(delPermitionIds, v.ID)
+		this.DelPermitions(delPermitionIds)
+		this.AddPermitions(this.PermissionID)
+
+		_, err = this.GetAllGroups()
+		if err != nil {
+			return err
 		}
-	}
 
-	this.DelPermitions(delPermitionIds)
-	this.AddPermitions(this.PermissionID)
+		delGroupIds := make([]uint, 0)
+		for _, id := range this.GroupID {
+			for _, v := range this.Groups {
+				if id == v.ID {
+					v.ID = 0
+				}
+			}
+		}
 
-	_, err = this.GetAllGroups()
-	if err != nil {
-		return err
-	}
-
-	delGroupIds := make([]uint, 0)
-	for _, id := range this.GroupID {
 		for _, v := range this.Groups {
-			if id == v.ID {
-				v.ID = 0
+			if 0 != v.ID {
+				delGroupIds = append(delGroupIds, v.ID)
 			}
 		}
+
+		this.DelGroups(delGroupIds)
+		this.AddGroups(this.GroupID)
+
 	}
 
-	for _, v := range this.Groups {
-		if 0 != v.ID {
-			delGroupIds = append(delGroupIds, v.ID)
-		}
-	}
-
-	this.DelGroups(delGroupIds)
-	this.AddGroups(this.GroupID)
-
-	err = this.Update(&this.User).Error
+	err := this.Update(&this.User).Error
 	if err != nil {
 		l4g.Error("UserEditForm:Save %v", err)
 	}

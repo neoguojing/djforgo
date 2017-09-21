@@ -15,11 +15,14 @@ var decoder = schema.NewDecoder()
 func Login(w http.ResponseWriter, req *http.Request) {
 	sessionStatu := context.Get(req, system.SESSIONSTATUS).(system.SessionStatus)
 	if sessionStatu == system.Session_Exist {
-		session_user := context.Get(req, system.USERINFO).(auth.IUser)
-		if session_user.IsAuthenticated() {
-			templates.RedirectTo(w, "/index")
-			return
+		session_user := context.Get(req, system.USERINFO)
+		if session_user != nil {
+			if session_user.(auth.IUser).IsAuthenticated() {
+				templates.RedirectTo(w, "/index")
+				return
+			}
 		}
+
 	}
 
 	if req.Method != http.MethodPost {
@@ -54,7 +57,7 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	context.Set(req, system.SESSIONINFO, user.GetUserName())
+	context.Set(req, system.SESSIONINFO, user.GetUserID())
 
 	templates.RedirectTo(w, "/index")
 
