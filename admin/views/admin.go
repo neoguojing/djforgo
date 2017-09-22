@@ -136,6 +136,7 @@ func parseEditForms(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var userFrom admin.UserEditForm
+		
 		err = decoder.Decode(&userFrom, r.PostForm)
 		l4g.Debug("***", userFrom, r.PostForm)
 		if err != nil {

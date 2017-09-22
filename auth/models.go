@@ -3,6 +3,7 @@ package auth
 import (
 	"djforgo/auth/contenttype"
 	"djforgo/dao"
+	"djforgo/utils"
 	l4g "github.com/alecthomas/log4go"
 	set "github.com/deckarep/golang-set"
 	"github.com/jinzhu/gorm"
@@ -82,7 +83,11 @@ func (this *UserManager) GetQueryset(out interface{}) *gorm.DB {
 
 func (this *UserManager) Update(user *User) *gorm.DB {
 	this.Init()
-	db := this.DB.Set("gorm:save_associations", false).Model(user).Updates(*user)
+
+	user.Password = ""
+	userMap := utils.Struct2Map(*user, user.BaseUser)
+	l4g.Debug("*********", userMap)
+	db := this.DB.Set("gorm:save_associations", false).Model(user).Updates(userMap)
 
 	return db
 }
@@ -92,17 +97,17 @@ func (this *UserManager) Delete(user *User) *gorm.DB {
 
 	tx := this.DB.Begin()
 
-	if err := this.DB.Model(user).Association("Permissions").Delete(user.Permissions).Error; err != nil {
+	if err := tx.Model(user).Association("Permissions").Delete(user.Permissions).Error; err != nil {
 		tx.Rollback()
 		return tx
 	}
 
-	if err := this.DB.Model(user).Association("Groups").Delete(user.Groups).Error; err != nil {
+	if err := tx.Model(user).Association("Groups").Delete(user.Groups).Error; err != nil {
 		tx.Rollback()
 		return tx
 	}
 
-	if err := this.DB.Unscoped().Delete(user).Error; err != nil {
+	if err := tx.Unscoped().Delete(user).Error; err != nil {
 		tx.Rollback()
 		return tx
 	}
