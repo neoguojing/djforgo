@@ -4,6 +4,7 @@ import (
 	"djforgo/auth/contenttype"
 	"djforgo/dao"
 	"djforgo/utils"
+
 	l4g "github.com/alecthomas/log4go"
 	set "github.com/deckarep/golang-set"
 	"github.com/jinzhu/gorm"
@@ -83,10 +84,9 @@ func (this *UserManager) GetQueryset(out interface{}) *gorm.DB {
 
 func (this *UserManager) Update(user *User) *gorm.DB {
 	this.Init()
-
-	user.Password = ""
 	userMap := utils.Struct2Map(*user, user.BaseUser)
 	l4g.Debug("*********", userMap)
+	delete(userMap, "Password")
 	db := this.DB.Set("gorm:save_associations", false).Model(user).Updates(userMap)
 
 	return db

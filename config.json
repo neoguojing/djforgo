@@ -9,7 +9,7 @@
 	"Pprof": "0.0.0.0:6067",
 	"DB": {
 		"Drivername": "mysql",
-		"DataSource": "admin:admin@tcp(192.168.59.96:3306)/webadmin?charset=utf8&parseTime=True&loc=Local"
+		"DataSource": "root:admin@tcp(127.0.0.1:3306)/webadmin?charset=utf8&parseTime=True&loc=Local"
 	},
 	"Session":{
 		"Salt":"123456",
