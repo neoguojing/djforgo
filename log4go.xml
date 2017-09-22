@@ -9,7 +9,7 @@
     <tag>file</tag>
     <type>file</type>
     <level>DEBUG</level>
-    <property name="filename">hds.log</property>
+    <property name="filename">djforgo.log</property>
     <!--
        %T - Time (15:04:05 MST)
        %t - Time (15:04)
@@ -41,7 +41,7 @@
     <tag>donotopen</tag>
     <type>socket</type>
     <level>FINEST</level>
-    <property name="endpoint">192.168.1.255:12124</property> <!-- recommend UDP broadcast -->
+    <property name="endpoint"></property> <!-- recommend UDP broadcast -->
     <property name="protocol">udp</property> <!-- tcp or udp -->
   </filter>
 </logging>
