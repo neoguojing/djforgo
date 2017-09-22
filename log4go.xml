@@ -41,7 +41,7 @@
     <tag>donotopen</tag>
     <type>socket</type>
     <level>FINEST</level>
-    <property name="endpoint"></property> <!-- recommend UDP broadcast -->
+    <property name="endpoint">127.0.0.1</property> <!-- recommend UDP broadcast -->
     <property name="protocol">udp</property> <!-- tcp or udp -->
   </filter>
 </logging>
