@@ -87,6 +87,31 @@ func (this *UserManager) Update(user *User) *gorm.DB {
 	return db
 }
 
+func (this *UserManager) Delete(user *User) *gorm.DB {
+	this.Init()
+
+	tx := this.DB.Begin()
+
+	if err := this.DB.Model(user).Association("Permissions").Delete(user.Permissions).Error; err != nil {
+		tx.Rollback()
+		return tx
+	}
+
+	if err := this.DB.Model(user).Association("Groups").Delete(user.Groups).Error; err != nil {
+		tx.Rollback()
+		return tx
+	}
+
+	if err := this.DB.Unscoped().Delete(user).Error; err != nil {
+		tx.Rollback()
+		return tx
+	}
+
+	tx.Commit()
+
+	return tx
+}
+
 func (this *UserManager) CreateUser(user *User) error {
 	user.Is_Admin = false
 	user.Is_staff = false
@@ -131,7 +156,7 @@ func (this *User) GetAllPermissions() ([]Permission, error) {
 			return nil, l4g.Error("User::GetAllPermissions", err)
 		}
 		this.Permissions = perms
-	} else if this.Is_staff {
+	} else {
 		this.Init()
 
 		if this.Email != "" {
@@ -150,9 +175,8 @@ func (this *User) GetAllPermissions() ([]Permission, error) {
 			this.Permissions = perms
 		}
 
-	} else {
-
 	}
+
 	return perms, nil
 }
 
@@ -165,7 +189,7 @@ func (this *User) GetAllGroups() ([]Group, error) {
 			return nil, l4g.Error("User::GetAllGroups", err)
 		}
 		this.Groups = groups
-	} else if this.Is_staff {
+	} else {
 		this.Init()
 		if this.Email != "" {
 			if this.ID == 0 {
@@ -182,8 +206,6 @@ func (this *User) GetAllGroups() ([]Group, error) {
 			}
 			this.Groups = groups
 		}
-
-	} else {
 
 	}
 	return groups, nil

@@ -58,6 +58,13 @@ var Urls = Routes{
 		Pattern:     "/edit/{model:[a-z]+}/{id:[0-9]+}",
 		HandlerFunc: middleware.MiddlewareHandlerFunc(admin.EditHandler),
 	},
+	Route{
+		Name:        "del",
+		Method1:     "GET",
+		Method2:     "POST",
+		Pattern:     "/del/{model:[a-z]+}/{id:[0-9]+}",
+		HandlerFunc: middleware.MiddlewareHandlerFunc(admin.DelHandler),
+	},
 }
 
 func newRouter() *mux.Router {

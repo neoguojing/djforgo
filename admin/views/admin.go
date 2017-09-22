@@ -137,7 +137,7 @@ func parseEditForms(w http.ResponseWriter, r *http.Request) {
 
 		var userFrom admin.UserEditForm
 		err = decoder.Decode(&userFrom, r.PostForm)
-		//l4g.Debug("***", userFrom, r.PostForm)
+		l4g.Debug("***", userFrom, r.PostForm)
 		if err != nil {
 			l4g.Error("Decode ,%v", err)
 			return
@@ -157,4 +157,79 @@ func parseEditForms(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func DelHandler(w http.ResponseWriter, r *http.Request) {
+
+	if !auth.IsAuthticated(r) {
+		templates.RedirectTo(w, "/login")
+		return
+	}
+
+	if r.Method != http.MethodPost {
+		vars := mux.Vars(r)
+		model := vars["model"]
+		id := vars["id"]
+
+		if id == "" {
+			l4g.Error("DelHandler: invalid id param")
+			return
+		}
+
+		//l4g.Debug("DelHandler", model, id)
+
+		ctxUser := context.Get(r, system.USERINFO)
+		if ctxUser == nil {
+			l4g.Error("DelHandler: ctxUser was nil")
+			return
+		}
+		currentUser := ctxUser.(*auth.User)
+		ctx := pongo2.Context{}
+
+		switch model {
+		case "user":
+			reqId, err := strconv.Atoi(id)
+			if err != nil {
+				l4g.Error("DelHandler:%v", err)
+				return
+			}
+
+			var targetUser auth.IUser
+
+			if currentUser.ID == uint(reqId) {
+				templates.RedirectTo(w, "/index")
+				return
+			} else {
+				targetUser, err = auth.GetUserByID(uint(reqId))
+				if err != nil {
+					return
+				}
+			}
+
+			targetUser.GetAllGroups()
+			targetUser.GetAllPermissions()
+
+			err = targetUser.(*auth.User).Delete(targetUser.(*auth.User)).Error
+			if err != nil {
+				l4g.Error("DelHandler:%v", err)
+			}
+			templates.RedirectTo(w, "/index")
+			return
+
+		case "perm":
+			currentUser.GetAllPermissions()
+			ctx.Update(pongo2.Context{"targetuser": currentUser})
+		case "group":
+			currentUser.GetAllGroups()
+			ctx.Update(pongo2.Context{"targetuser": currentUser})
+		default:
+			l4g.Error("parseEditParams: invalid model")
+			return
+		}
+
+		templates.RenderTemplate(r, "./admin/templates/index.html", auth.Auth_Context(r, ctx))
+		return
+	}
+
+	return
 }

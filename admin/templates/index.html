@@ -140,7 +140,7 @@
 						<td>{{ singleuser.Is_active }}</td>
 						<td align="right">
 							<a href="/edit/user/{{ singleuser.ID }}" class="btn btn-default" role="button">Edit</a>
-							<a href="#" class="btn btn-default" role="button">Delete</a>
+							<a href="/del/user/{{ singleuser.ID }}" class="btn btn-default" role="button">Delete</a>
 						</td>
 					</tr>
 				{% endfor %}
@@ -170,7 +170,7 @@
 
 						<td align="right">
 							<a href="/edit/perm/{{ permition.ID }}" class="btn btn-default" role="button">Edit</a>
-							<a href="#" class="btn btn-default" role="button">Delete</a>
+							<a href="/del/perm/{{ permition.ID }}" class="btn btn-default" role="button">Delete</a>
 						</td>
 					</tr>
 				{% endfor %}
@@ -197,7 +197,7 @@
 						<td>{{ group.Name }}</td>
 						<td align="right">
 							<a href="/edit/group/{{ group.ID }}" class="btn btn-default" role="button">Edit</a>
-							<a href="#" class="btn btn-default" role="button">Delete</a>
+							<a href="/del/group/{{ group.ID }}" class="btn btn-default" role="button">Delete</a>
 						</td>
 					</tr>
 				{% endfor %}
