@@ -19,13 +19,11 @@ import (
 
 func main() {
 
-	//命令行解析
 	logcfgfile := flag.String("lf", "log4go.xml", "log4go cfgfile")
 	appcfgfile := flag.String("f", "config.json", "config file path")
 	help := flag.Bool("help", false, "help")
 	flag.Parse()
 
-	//打印参数帮助列表
 	if *help {
 		flag.PrintDefaults()
 		return
