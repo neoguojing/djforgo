@@ -65,6 +65,13 @@ var Urls = Routes{
 		Pattern:     "/del/{model:[a-z]+}/{id:[0-9]+}",
 		HandlerFunc: middleware.MiddlewareHandlerFunc(admin.DelHandler),
 	},
+	Route{
+		Name:        "password_reset",
+		Method1:     "GET",
+		Method2:     "POST",
+		Pattern:     "/reset",
+		HandlerFunc: middleware.MiddlewareHandlerFunc(admin.PasswordResetHandler),
+	},
 }
 
 func newRouter() *mux.Router {

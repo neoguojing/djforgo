@@ -93,3 +93,34 @@ type GroupEditForm struct {
 func (this *GroupEditForm) Valid() error {
 	return nil
 }
+
+type PasswordResetForm struct {
+	OldPassword string `schema:"oldpassword"`
+	Password1   string `schema:"password1"`
+	Password2   string `schema:"password2"`
+}
+
+func (this *PasswordResetForm) Save(user *auth.User) error {
+	user.SetPassword(this.Password1)
+	if err := user.Update(user).Error; err != nil {
+		l4g.Error("PasswordResetForm::Save %v", err)
+		return err
+	}
+	return nil
+}
+
+func (this *PasswordResetForm) Valid(user *auth.User) error {
+	if this.OldPassword == "" || this.Password1 == "" || this.Password2 == "" {
+		return l4g.Error("Passwords was empty")
+	}
+
+	if !user.CheckPassword(this.OldPassword) {
+		return l4g.Error("Old password was invalid")
+	}
+
+	if this.Password1 != this.Password2 {
+		return l4g.Error("New passwords was not equal")
+	}
+
+	return nil
+}

@@ -233,3 +233,41 @@ func DelHandler(w http.ResponseWriter, r *http.Request) {
 
 	return
 }
+
+func PasswordResetHandler(w http.ResponseWriter, r *http.Request) {
+	if !auth.IsAuthticated(r) {
+		templates.RedirectTo(w, "/login")
+		return
+	}
+
+	if r.Method != http.MethodPost {
+		templates.RenderTemplate(r, "./admin/templates/password_reset.html", auth.Auth_Context(r, nil))
+		return
+	}
+
+	err := r.ParseForm()
+	if err != nil {
+		l4g.Error("PasswordResetHandler,%v", err)
+		return
+	}
+
+	var passwordResetFrom admin.PasswordResetForm
+	err = decoder.Decode(&passwordResetFrom, r.PostForm)
+	if err != nil {
+		l4g.Error("PasswordResetHandler ,%v", err)
+		return
+	}
+
+	ctxUser := context.Get(r, system.USERINFO).(*auth.User)
+	if passwordResetFrom.Valid(ctxUser) != nil {
+		templates.RenderTemplate(r, "./admin/templates/password_reset.html", auth.Auth_Context(r, nil))
+		return
+	}
+
+	err = passwordResetFrom.Save(ctxUser)
+	if err != nil {
+		templates.RenderTemplate(r, "./admin/templates/password_reset.html", auth.Auth_Context(r, nil))
+	}
+
+	templates.RedirectTo(w, "/index")
+}
