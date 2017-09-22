@@ -16,7 +16,7 @@ type SessionStore struct {
 }
 
 func newSessionStore() *SessionStore {
-	serstr := system.QasConfig.Session.Salt + time.Now().String()
+	serstr := system.SysConfig.Session.Salt + time.Now().String()
 	secret, _ := bcrypt.GenerateFromPassword([]byte(serstr), 14)
 	return &SessionStore{
 		store: sessions.NewCookieStore(secret),
@@ -24,7 +24,7 @@ func newSessionStore() *SessionStore {
 }
 
 func (this *SessionStore) GetSession(r *http.Request) *sessions.Session {
-	session, err := this.store.New(r, system.QasConfig.Session.Name)
+	session, err := this.store.New(r, system.SysConfig.Session.Name)
 	if err != nil {
 		l4g.Error(err)
 		return nil
@@ -33,10 +33,10 @@ func (this *SessionStore) GetSession(r *http.Request) *sessions.Session {
 }
 
 func (this *SessionStore) SetSession(w http.ResponseWriter, r *http.Request, maxage int, key, value interface{}) {
-	session, _ := this.store.Get(r, system.QasConfig.Session.Name)
+	session, _ := this.store.Get(r, system.SysConfig.Session.Name)
 	session.Values[key] = value
 	session.Options.MaxAge = maxage
-	session.Options.Path = system.QasConfig.Session.Path
+	session.Options.Path = system.SysConfig.Session.Path
 	session.Save(r, w)
 }
 

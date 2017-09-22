@@ -40,7 +40,7 @@ type Config struct {
 	Admin   AdminCfg
 }
 
-var QasConfig *Config = new(Config)
+var SysConfig *Config = new(Config)
 
 func LoadConfig(appcfgfile *string) error {
 
@@ -51,7 +51,7 @@ func LoadConfig(appcfgfile *string) error {
 			data = []byte(*appcfgfile)
 		}
 
-		err = json.Unmarshal(data, QasConfig)
+		err = json.Unmarshal(data, SysConfig)
 		if err != nil {
 			return l4g.Error(err)
 		}

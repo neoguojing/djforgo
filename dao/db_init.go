@@ -11,7 +11,7 @@ var DB_Instance *gorm.DB
 
 func DB_Init() error {
 	var err error
-	DB_Instance, err = gorm.Open(system.QasConfig.DB.Drivername, system.QasConfig.DB.DataSource)
+	DB_Instance, err = gorm.Open(system.SysConfig.DB.Drivername, system.SysConfig.DB.DataSource)
 	if err != nil {
 		l4g.Error(err)
 	}

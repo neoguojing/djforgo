@@ -40,7 +40,7 @@ func (this *SessionMiddleware) ProcessResponse(w http.ResponseWriter, r *http.Re
 			l4g.Error("SessionMiddleware:ProcessResponse invalid SESSIONINFO", uid)
 			return
 		}
-		G_SessionStore.SetSession(w, r, system.QasConfig.Session.MaxAge, system.SESSIONINFO, uid)
+		G_SessionStore.SetSession(w, r, system.SysConfig.Session.MaxAge, system.SESSIONINFO, uid)
 	}
 	ssn_status := context.Get(r, system.SESSIONSTATUS).(system.SessionStatus)
 	switch ssn_status {

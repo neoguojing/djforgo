@@ -74,7 +74,7 @@
 	            <li><a href="#">Reset password</a></li>
 	          </ul>
 	        </li>
-	        <li><a href="/logout" clase="btn btn-primary navbar-btn">Logout</a></li>
+	        <li><a href="/logout" clase="btn btn-primary navbar-btn">Sign out</a></li>
 	      </ul>
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
@@ -88,7 +88,6 @@
 		<h2 class="text-center" >Edit</h1>
 	</div>
 	{% if user.Is_active %}
-	{% if user.Is_staff %}
 	
 	<div class="row">
 		<form class="form-horizontal" action="/edit/user/{{ targetuser.ID }}" method="POST">
@@ -181,7 +180,6 @@
 		</form>
 	</div>
 	
-	{% endif %}
 	{% endif %}
 
 </div>

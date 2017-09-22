@@ -8,8 +8,8 @@ import (
 )
 
 // Push metircs in background.
-func MetricStart() {
-	if len(system.QasConfig.Metric.Addr) == 0 {
+func PrometheusMonitorStart() {
+	if len(system.SysConfig.Metric.Addr) == 0 {
 		l4g.Info("disable Prometheus client")
 		return
 	}
@@ -17,5 +17,5 @@ func MetricStart() {
 	l4g.Info("start Prometheus client")
 
 	http.Handle("/metrics", promhttp.Handler())
-	l4g.Critical(http.ListenAndServe(system.QasConfig.Metric.Addr, nil))
+	l4g.Critical(http.ListenAndServe(system.SysConfig.Metric.Addr, nil))
 }
