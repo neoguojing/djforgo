@@ -85,8 +85,10 @@ func (this *UserManager) GetQueryset(out interface{}) *gorm.DB {
 func (this *UserManager) Update(user *User) *gorm.DB {
 	this.Init()
 	userMap := utils.Struct2Map(*user, user.BaseUser)
-	l4g.Debug("*********", userMap)
-	delete(userMap, "Password")
+	if user.Password == "" {
+		delete(userMap, "Password")
+	}
+
 	db := this.DB.Set("gorm:save_associations", false).Model(user).Updates(userMap)
 
 	return db
