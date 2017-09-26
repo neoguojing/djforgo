@@ -1,8 +1,8 @@
 package oauth2
 
 import (
-	"djforgo/urls"
 	"djforgo/system"
+	"djforgo/urls"
 )
 
 var authUrl = urls.Routes{
