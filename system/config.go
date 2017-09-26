@@ -27,17 +27,22 @@ type SessionCfg struct {
 	Path   string
 }
 
+type ServicesCfg struct {
+	OAuth int
+}
+
 type AdminCfg struct {
 	Email string
 }
 
 type Config struct {
-	Downnet DownnetCfg
-	Metric  MetricConfig
-	Pprof   string
-	DB      DBConfig
-	Session SessionCfg
-	Admin   AdminCfg
+	Downnet  DownnetCfg
+	Metric   MetricConfig
+	Pprof    string
+	DB       DBConfig
+	Session  SessionCfg
+	Admin    AdminCfg
+	Services ServicesCfg
 }
 
 var SysConfig *Config = new(Config)

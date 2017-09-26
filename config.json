@@ -19,5 +19,8 @@
 	},
 	"Admin":{
 		"Email":"guojing_neo@163.com"
+	},
+	"Services":{
+		"OAuth":1
 	}
 }

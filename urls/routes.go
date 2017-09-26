@@ -12,6 +12,13 @@ var (
 	G_Router *mux.Router
 )
 
+func RegisterRouters(routes Routes) {
+	for _, route := range routes {
+		G_Router.Methods(route.Method1, route.Method2).Path(route.Pattern).
+			Name(route.Name).HandlerFunc(route.HandlerFunc)
+	}
+}
+
 type Route struct {
 	Name        string
 	Method1     string

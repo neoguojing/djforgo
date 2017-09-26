@@ -20,11 +20,16 @@ func NewServer() *Server {
 var ServerInstance = NewServer()
 
 func (this *Server) OnInit() error {
+	//database relate init
+	err := dao.DB_Init()
+	dao.InitSrores()
+	
+	//session init
 	sessions.InitSessionStore()
 	http.Handle("/", urls.G_Router)
 	l4g.Info("http://%s:%s/\n", system.SysConfig.Downnet.HttpIP, system.SysConfig.Downnet.Port)
 
-	err := dao.DB_Init()
+	
 
 	return err
 }

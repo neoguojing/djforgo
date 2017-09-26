@@ -7,6 +7,7 @@ import (
 	"djforgo/system/register"
 	"flag"
 	"fmt"
+	"github.com/felipeweb/osin-mysql"
 )
 
 func main() {
@@ -17,7 +18,7 @@ func main() {
 	flag.Parse()
 
 	system.LoadConfig(appcfgfile)
-	fmt.Println(system.QasConfig)
+	fmt.Println(system.SysConfig)
 
 	switch {
 	case *help:
@@ -27,6 +28,7 @@ func main() {
 		register.ModelSetInstance.CreateContentType()
 		register.ModelSetInstance.CreatePermissions()
 		createAdmin()
+		createOAuthStore()
 	}
 
 }
@@ -45,11 +47,26 @@ func createAdmin() {
 		return
 	}
 
-	user.SetEmail(system.QasConfig.Admin.Email)
+	user.SetEmail(system.SysConfig.Admin.Email)
 	user.SetUserName("admin")
 	user.SetPassword("admin")
 	if err = user.CreateAdminUser(&user); err != nil {
 		fmt.Println("CreateAdminUser", err)
 	}
 
+}
+
+func createOAuthStore() {
+	if system.SysConfig.Services.OAuth != 1 {
+		return
+	}
+
+	err := dao.DB_Init()
+	if err != nil {
+		return
+	}
+	defer dao.DB_Destroy()
+
+	system.G_OAuthStore = mysql.New(dao.DB_Instance.DB(), "oauth_")
+	system.G_OAuthStore.CreateSchemas()
 }
