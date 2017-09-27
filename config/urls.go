@@ -1,5 +1,9 @@
 package config
 
 import (
-	_ "djforgo/contrib/oauth2"
+	"djforgo/contrib/oauth2"
 )
+
+func InitUrl() {
+	oauth2.InitUrls()
+}

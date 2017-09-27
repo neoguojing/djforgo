@@ -1,12 +1,11 @@
 package server
 
 import (
-	//init section
-	"djforgo/urls"
-
+	"djforgo/config"
 	"djforgo/dao"
 	"djforgo/sessions"
 	"djforgo/system"
+	"djforgo/urls"
 	"fmt"
 	l4g "github.com/alecthomas/log4go"
 	"net/http"
@@ -28,6 +27,11 @@ func (this *Server) OnInit() error {
 
 	//session init
 	sessions.InitSessionStore()
+
+	//app config init
+	config.InitUrl()
+
+	//register handler
 	http.Handle("/", urls.G_Router)
 	l4g.Info("http://%s:%s/\n", system.SysConfig.Downnet.HttpIP, system.SysConfig.Downnet.Port)
 

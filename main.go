@@ -7,14 +7,12 @@ import (
 	"runtime"
 	"syscall"
 
-	"net/http"
-	_ "net/http/pprof"
-
-	//"context"
 	"djforgo/server"
 	"djforgo/system"
 	"djforgo/utils"
 	l4g "github.com/alecthomas/log4go"
+	"net/http"
+	_ "net/http/pprof"
 )
 
 func main() {
@@ -49,7 +47,6 @@ func main() {
 
 	go utils.PrometheusMonitorStart()
 
-	//ctx, cancel := context.WithCancel(context.Background())
 	err := server.ServerInstance.OnInit()
 	if err != nil {
 		return
@@ -61,6 +58,5 @@ func main() {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGTERM)
 	<-c
-	//cancel()
 	l4g.Info("Receive ctrl-c")
 }
