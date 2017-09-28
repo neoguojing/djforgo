@@ -79,6 +79,13 @@ var Urls = Routes{
 		Pattern:     "/reset",
 		HandlerFunc: middleware.MiddlewareHandlerFunc(admin.PasswordResetHandler),
 	},
+	Route{
+		Name:        "model_edit",
+		Method1:     "GET",
+		Method2:     "POST",
+		Pattern:     "/model_edit/{modelname:[a-z]+}/{id:[0-9]+}",
+		HandlerFunc: middleware.MiddlewareHandlerFunc(admin.ModelEditHandler),
+	},
 }
 
 func newRouter() *mux.Router {

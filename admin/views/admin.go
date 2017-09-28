@@ -3,6 +3,7 @@ package views
 import (
 	"djforgo/admin"
 	"djforgo/auth"
+	"djforgo/forms"
 	"djforgo/system"
 	"djforgo/templates"
 	l4g "github.com/alecthomas/log4go"
@@ -104,11 +105,7 @@ func parseEditParam(w http.ResponseWriter, r *http.Request) {
 		}
 
 	case "perm":
-		currentUser.GetAllPermissions()
-		ctx.Update(pongo2.Context{"targetuser": currentUser})
 	case "group":
-		currentUser.GetAllGroups()
-		ctx.Update(pongo2.Context{"targetuser": currentUser})
 	default:
 		l4g.Error("parseEditParams: invalid model")
 		return
@@ -158,6 +155,39 @@ func parseEditForms(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func ModelEditHandler(w http.ResponseWriter, r *http.Request) {
+
+	gformHandler(r)
+
+}
+
+func gformHandler(r *http.Request) {
+	vars := mux.Vars(r)
+	modelName := vars["modelname"]
+	id := vars["id"]
+	_ = modelName
+	if id == "" {
+		l4g.Error("ModelEditHandler: invalid id param")
+		return
+	}
+
+	forms.Init()
+	form := admin.PermitionForm(r)
+
+	if r.Method != http.MethodPost {
+		tContext := pongo2.Context{"model_id": id, "fields": form.Fields()}
+		templates.RenderTemplate(r, "./admin/templates/model_edit.html", auth.Auth_Context(r, tContext))
+		return
+	}
+
+	if !form.IsValid() {
+		return
+	}
+
+	model := form.GetModel()
+	l4g.Debug("********", model)
 }
 
 func DelHandler(w http.ResponseWriter, r *http.Request) {

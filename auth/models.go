@@ -27,10 +27,10 @@ func (this *PermissionManager) GetAllPermitions() ([]Permission, error) {
 
 type Permission struct {
 	gorm.Model
-	Name         string                  `gorm:"size:255" schema:"name"`
-	Content      contenttype.ContentType `gorm:"ForeignKey:Contentrefer;unique" schema:"-"`
+	Name         string                  `gorm:"size:255" gforms:"name"`
+	Content      contenttype.ContentType `gorm:"ForeignKey:Contentrefer;unique" gforms:"-"`
 	Contentrefer uint                    `schema:"contentid"`
-	CodeName     string                  `gorm:"size:100;unique" schema:"codename"`
+	CodeName     string                  `gorm:"size:100;unique" gforms:"codename"`
 
 	PermissionManager `gorm:"-"`
 }
@@ -64,10 +64,10 @@ type GroupManager struct {
 
 type Group struct {
 	gorm.Model
-	Name        string       `gorm:"size:80;unique" schema:"name"`
+	Name        string       `gorm:"size:80;unique" gforms:"name"`
 	Permissions []Permission `gorm:"many2many:group_permissions;"`
 
-	GroupManager `gorm:"-"`
+	GroupManager
 }
 
 type UserManager struct {

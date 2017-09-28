@@ -58,5 +58,5 @@ func main() {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGTERM)
 	<-c
-	l4g.Info("Receive ctrl-c")
+	l4g.Info("Exit ctrl+c")
 }

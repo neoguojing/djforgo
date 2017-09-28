@@ -3,6 +3,7 @@ package admin
 import (
 	"djforgo/auth"
 	l4g "github.com/alecthomas/log4go"
+	"github.com/bluele/gforms"
 )
 
 type UserEditForm struct {
@@ -76,24 +77,6 @@ func (this *UserEditForm) Valid() error {
 	return nil
 }
 
-type PermitionEditForm struct {
-	ID uint `schema:"id"`
-	auth.Permission
-}
-
-func (this *PermitionEditForm) Valid() error {
-	return nil
-}
-
-type GroupEditForm struct {
-	ID uint `schema:"id"`
-	auth.Group
-}
-
-func (this *GroupEditForm) Valid() error {
-	return nil
-}
-
 type PasswordResetForm struct {
 	OldPassword string `schema:"oldpassword"`
 	Password1   string `schema:"password1"`
@@ -123,4 +106,26 @@ func (this *PasswordResetForm) Valid(user *auth.User) error {
 	}
 
 	return nil
+}
+
+var (
+	PermitionForm = gforms.DefineModelForm(auth.Permission{}, gforms.NewFields(
+		gforms.NewTextField(
+			"name",
+			gforms.Validators{
+				gforms.Required(),
+			},
+		),
+		gforms.NewTextField(
+			"codename",
+			gforms.Validators{
+				gforms.Required(),
+			},
+		),
+	))
+)
+
+type GroupForm struct {
+	ID uint `schema:"id"`
+	auth.Group
 }
