@@ -52,7 +52,5 @@ In root directory
 
 # Author
 **neo**
-* <https://github.com/neoguojing>
-
 
 
