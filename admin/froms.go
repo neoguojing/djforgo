@@ -2,8 +2,10 @@ package admin
 
 import (
 	"djforgo/auth"
+	"djforgo/utils"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/bluele/gforms"
+	"net/http"
 )
 
 type UserEditForm struct {
@@ -108,8 +110,16 @@ func (this *PasswordResetForm) Valid(user *auth.User) error {
 	return nil
 }
 
-var (
-	PermitionForm = gforms.DefineModelForm(auth.Permission{}, gforms.NewFields(
+type PermitionForm struct {
+	gforms.ModelFormInstance
+}
+
+func (f *PermitionForm) Fields() []gforms.FieldInterface {
+	return f.ModelFormInstance.Fields()
+}
+
+func (this *PermitionForm) Init(r *http.Request) {
+	this.ModelFormInstance = *gforms.DefineModelForm(auth.Permission{}, gforms.NewFields(
 		gforms.NewTextField(
 			"name",
 			gforms.Validators{
@@ -122,10 +132,14 @@ var (
 				gforms.Required(),
 			},
 		),
-	))
-)
+	))(r)
+}
 
 type GroupForm struct {
 	ID uint `schema:"id"`
 	auth.Group
+}
+
+func init() {
+	utils.G_ObjRegisterStore.Set(PermitionForm{})
 }

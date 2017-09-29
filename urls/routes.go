@@ -83,7 +83,7 @@ var Urls = Routes{
 		Name:        "model_edit",
 		Method1:     "GET",
 		Method2:     "POST",
-		Pattern:     "/model_edit/{modelname:[a-z]+}/{id:[0-9]+}",
+		Pattern:     "/model_edit/{modelname:[_a-zA-Z0-9]+}/{id:[0-9]+}",
 		HandlerFunc: middleware.MiddlewareHandlerFunc(admin.ModelEditHandler),
 	},
 }

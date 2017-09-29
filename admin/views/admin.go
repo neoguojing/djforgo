@@ -6,12 +6,14 @@ import (
 	"djforgo/forms"
 	"djforgo/system"
 	"djforgo/templates"
+	"djforgo/utils"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
 	"net/http"
+	"reflect"
 	"strconv"
 )
 
@@ -167,14 +169,21 @@ func gformHandler(r *http.Request) {
 	vars := mux.Vars(r)
 	modelName := vars["modelname"]
 	id := vars["id"]
-	_ = modelName
 	if id == "" {
 		l4g.Error("ModelEditHandler: invalid id param")
 		return
 	}
 
 	forms.Init()
-	form := admin.PermitionForm(r)
+	l4g.Debug(reflect.TypeOf(utils.G_ObjRegisterStore.New(modelName)).Name())
+	obj := utils.G_ObjRegisterStore.New(modelName)
+	if obj == nil {
+		panic(1)
+		return
+	}
+	l4g.Debug("********%#v",obj)
+	form := obj.(utils.IForm)
+	form.Init(r)
 
 	if r.Method != http.MethodPost {
 		tContext := pongo2.Context{"model_id": id, "fields": form.Fields()}

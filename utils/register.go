@@ -2,22 +2,40 @@ package utils
 
 import (
 	l4g "github.com/alecthomas/log4go"
+	"github.com/bluele/gforms"
+	"net/http"
 	"reflect"
 )
+
+type Object interface {
+}
+
+type IForm interface {
+	Object
+
+	Init(r *http.Request)
+	IsValid() bool
+	Fields() []gforms.FieldInterface
+	GetModel() interface{}
+}
+
+type IModel interface {
+	Object
+}
 
 var G_ObjRegisterStore = initobjStore()
 
 func initobjStore() *objStore {
 	return &objStore{
-		store: make(map[string]interface{}),
+		store: make(map[string]Object),
 	}
 }
 
 type objStore struct {
-	store map[string]interface{}
+	store map[string]Object
 }
 
-func (this *objStore) Set(value interface{}) error {
+func (this *objStore) Set(value Object) error {
 	if reflect.TypeOf(value).Kind() == reflect.Ptr {
 		return l4g.Error("objStore::Set,value can not be ptr")
 	}
@@ -25,18 +43,28 @@ func (this *objStore) Set(value interface{}) error {
 	key := reflect.TypeOf(value).Name()
 
 	if _, ok := this.store[key]; ok {
-		return l4g.Error("objStore::Set,key already exist")
+		return l4g.Error("objStore::Set,key=%s already exist", key)
 	}
 	this.store[key] = value
 	return nil
 }
 
-func (this *objStore) Get(key string) interface{} {
-	return this.store[key]
+func (this *objStore) Get(key string) Object {
+	obj, ok := this.store[key]
+	if !ok {
+		l4g.Error("objStore::Get,key=%s was not exist", key)
+		return nil
+	}
+	return obj
 }
 
-func (this *objStore) New(key string) interface{} {
+func (this *objStore) New(key string) Object {
 	//copy object
-	rtn := this.store[key]
+	obj, ok := this.store[key]
+	if !ok {
+		l4g.Error("objStore::Get,key=%s was not exist", key)
+		return nil
+	}
+	rtn := obj
 	return rtn
 }
