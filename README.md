@@ -4,7 +4,7 @@ Inspired by [django](https://github.com/django/django).
 
 ## Overview
 
-* Provide admin pages like django do. Use [Bootstrap](http://v3.bootcss.com/)
+* Provide admin pages like django do. Use [Bootstrap](http://v3.bootcss.com/).
 * Support a few middleware [session,request,common].
 * Support ORM ,Form,Model programing like django.
 
