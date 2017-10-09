@@ -114,10 +114,6 @@ type PermitionForm struct {
 	gforms.ModelFormInstance
 }
 
-func (f *PermitionForm) Fields() []gforms.FieldInterface {
-	return f.ModelFormInstance.Fields()
-}
-
 func (this *PermitionForm) Init(r *http.Request) {
 	this.ModelFormInstance = *gforms.DefineModelForm(auth.Permission{}, gforms.NewFields(
 		gforms.NewTextField(

@@ -62,9 +62,8 @@ func (this *objStore) New(key string) Object {
 	//copy object
 	obj, ok := this.store[key]
 	if !ok {
-		l4g.Error("objStore::Get,key=%s was not exist", key)
+		l4g.Error("objStore::Get,key=%s was not exist in %v", key, this.store)
 		return nil
 	}
-	rtn := obj
-	return rtn
+	return reflect.New(reflect.TypeOf(obj)).Interface()
 }
