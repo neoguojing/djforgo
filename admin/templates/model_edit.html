@@ -93,10 +93,10 @@
 	{% if user.Is_staff %}
 	
 	<div class="row">
-		<form class="form-horizontal" action="/model_edit/PermitionForm/{{ model_id }}" method="POST">
+		<form class="form-horizontal" action="/model_edit/{{ model_name }}/{{ model_id }}" method="POST">
 			{% for  field in fields %}
 			<div class="form-group">
-			  <label for="{{ field.GetName() }}" class="col-sm-4 control-label">{{ field.GetName() }}: </label>
+			  <label for="{{ field.GetName() }}" class="col-sm-4 control-label">{{ field.GetName() }} </label>
 			  <div class="col-sm-4">
 			  {{ field.Html() | safe  }}
 			  </div>

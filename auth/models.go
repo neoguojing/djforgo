@@ -26,7 +26,7 @@ func (this *PermissionManager) GetAllPermitions() ([]Permission, error) {
 }
 
 type Permission struct {
-	gorm.Model
+	ID           uint                    `gorm:"primary_key" gforms:"id"`
 	Name         string                  `gorm:"size:255" gforms:"name"`
 	Content      contenttype.ContentType `gorm:"ForeignKey:Contentrefer;unique" gforms:"-"`
 	Contentrefer uint                    `schema:"contentid"`
@@ -63,7 +63,7 @@ type GroupManager struct {
 }
 
 type Group struct {
-	gorm.Model
+	ID          uint         `gorm:"primary_key" gforms:"id"`
 	Name        string       `gorm:"size:80;unique" gforms:"name"`
 	Permissions []Permission `gorm:"many2many:group_permissions;"`
 

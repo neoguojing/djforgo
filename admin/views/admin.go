@@ -3,6 +3,7 @@ package views
 import (
 	"djforgo/admin"
 	"djforgo/auth"
+	"djforgo/dao"
 	"djforgo/forms"
 	"djforgo/system"
 	"djforgo/templates"
@@ -13,7 +14,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
 	"net/http"
-	"reflect"
 	"strconv"
 )
 
@@ -160,6 +160,10 @@ func parseEditForms(w http.ResponseWriter, r *http.Request) {
 }
 
 func ModelEditHandler(w http.ResponseWriter, r *http.Request) {
+	if !auth.IsAuthticated(r) {
+		templates.RedirectTo(w, "/login")
+		return
+	}
 
 	gformHandler(r)
 
@@ -173,30 +177,42 @@ func gformHandler(r *http.Request) {
 		l4g.Error("ModelEditHandler: invalid id param")
 		return
 	}
-
+	
 	forms.Init()
-	l4g.Debug(reflect.TypeOf(utils.G_ObjRegisterStore.New(modelName)).Name())
+
 	obj := utils.G_ObjRegisterStore.New(modelName)
 	if obj == nil {
 		panic(1)
 		return
 	}
-	l4g.Debug("********%#v",obj)
+
 	form := obj.(utils.IForm)
 	form.Init(r)
 
 	if r.Method != http.MethodPost {
-		tContext := pongo2.Context{"model_id": id, "fields": form.Fields()}
+		tContext := pongo2.Context{"model_id": id, "model_name": modelName, "fields": form.Fields()}
 		templates.RenderTemplate(r, "./admin/templates/model_edit.html", auth.Auth_Context(r, tContext))
 		return
 	}
 
 	if !form.IsValid() {
+		l4g.Debug("form is invalid")
 		return
 	}
 
 	model := form.GetModel()
-	l4g.Debug("********", model)
+	l4g.Debug(model)
+	return
+	if model != nil {
+		db := dao.NewManager().Update(model)
+		if nil != db.Error {
+			l4g.Error(db.Error)
+			return
+		}
+
+	} else {
+		panic("model was nil ")
+	}
 }
 
 func DelHandler(w http.ResponseWriter, r *http.Request) {

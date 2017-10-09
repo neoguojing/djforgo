@@ -65,5 +65,6 @@ func (this *objStore) New(key string) Object {
 		l4g.Error("objStore::Get,key=%s was not exist in %v", key, this.store)
 		return nil
 	}
+
 	return reflect.New(reflect.TypeOf(obj)).Interface()
 }

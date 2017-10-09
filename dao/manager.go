@@ -8,6 +8,7 @@ import (
 type IManager interface {
 	GetQueryset(interface{}) *gorm.DB
 	Save(interface{}) *gorm.DB
+	Update(interface{}) *gorm.DB
 	Delete(interface{}) *gorm.DB
 }
 
@@ -47,6 +48,14 @@ func (this *Manager) Save(in interface{}) *gorm.DB {
 	} else {
 		db = this.DB.Save(in)
 	}
+
+	return db
+}
+
+func (this *Manager) Update(in interface{}) *gorm.DB {
+	this.Init()
+
+	db := this.DB.Set("gorm:save_associations", false).Model(&in).Updates(in)
 
 	return db
 }

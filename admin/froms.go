@@ -5,6 +5,7 @@ import (
 	"djforgo/utils"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/bluele/gforms"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -115,7 +116,21 @@ type PermitionForm struct {
 }
 
 func (this *PermitionForm) Init(r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	if id == "" {
+		panic(l4g.Error("ModelEditHandler: invalid id param"))
+		return
+	}
+
+	attrs := make(map[string]string)
+
 	this.ModelFormInstance = *gforms.DefineModelForm(auth.Permission{}, gforms.NewFields(
+		gforms.NewTextField(
+			"id",
+			nil,
+			gforms.HiddenInputWidget(attrs),
+		),
 		gforms.NewTextField(
 			"name",
 			gforms.Validators{
@@ -129,6 +144,9 @@ func (this *PermitionForm) Init(r *http.Request) {
 			},
 		),
 	))(r)
+
+	this.Fields()[0].SetInitial(id)
+
 }
 
 type GroupForm struct {

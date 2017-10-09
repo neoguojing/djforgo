@@ -67,6 +67,6 @@ func createOAuthStore() {
 	}
 	defer dao.DB_Destroy()
 
-	system.G_OAuthStore = mysql.New(dao.DB_Instance.DB(), "oauth_")
-	system.G_OAuthStore.CreateSchemas()
+	dao.G_OAuthStore = mysql.New(dao.DB_Instance.DB(), "oauth_")
+	dao.G_OAuthStore.CreateSchemas()
 }
