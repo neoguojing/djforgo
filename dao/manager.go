@@ -55,7 +55,7 @@ func (this *Manager) Save(in interface{}) *gorm.DB {
 func (this *Manager) Update(in interface{}) *gorm.DB {
 	this.Init()
 
-	db := this.DB.Set("gorm:save_associations", false).Model(&in).Updates(in)
+	db := this.DB.Set("gorm:save_associations", false).Model(in).Updates(in)
 
 	return db
 }

@@ -177,7 +177,7 @@ func gformHandler(r *http.Request) {
 		l4g.Error("ModelEditHandler: invalid id param")
 		return
 	}
-	
+
 	forms.Init()
 
 	obj := utils.G_ObjRegisterStore.New(modelName)
@@ -202,7 +202,7 @@ func gformHandler(r *http.Request) {
 
 	model := form.GetModel()
 	l4g.Debug(model)
-	return
+
 	if model != nil {
 		db := dao.NewManager().Update(model)
 		if nil != db.Error {
